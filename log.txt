@@ -153,3 +153,28 @@
 16 Oct 2020 6:59:18 PM - 0: too many sea tiles: 0.4503038194444444 not in [0.35, 0.45000002]
 16 Oct 2020 6:59:18 PM - 0: too few sea tiles: 0.3046875 not in [0.35, 0.45000002]
 16 Oct 2020 6:59:19 PM - 0: 17 failures
+16 Oct 2020 7:39:47 PM - 0: too many sea tiles: 0.5818142361111112 not in [0.35, 0.45000002]
+16 Oct 2020 7:39:48 PM - 0: bad peak altitude: 4098 < 5000
+16 Oct 2020 7:39:48 PM - 0: too many sea tiles: 0.4557291666666667 not in [0.35, 0.45000002]
+16 Oct 2020 7:39:49 PM - 0: missing 2 resources: cocoa, rubber
+16 Oct 2020 7:39:49 PM - 0: missing 2 resources: cocoa, rubber
+16 Oct 2020 7:39:50 PM - 0: bad peak altitude: 4420 < 5000
+16 Oct 2020 7:39:50 PM - 0: 6 failures
+16 Oct 2020 7:41:08 PM - 0: too many sea tiles: 0.5596788194444444 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:08 PM - 0: too many sea tiles: 0.4750434027777778 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:08 PM - 0: too few sea tiles: 0.2751736111111111 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:08 PM - 0: too few sea tiles: 0.3053385416666667 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:09 PM - 0: too many sea tiles: 0.4748263888888889 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:09 PM - 0: too many sea tiles: 0.4702690972222222 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:09 PM - 0: missing 1 resources: cocoa
+16 Oct 2020 7:41:10 PM - 0: too many sea tiles: 0.4542100694444444 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:10 PM - 0: too few sea tiles: 0.2903645833333333 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:10 PM - 0: too many sea tiles: 0.5186631944444444 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:10 PM - 0: too few sea tiles: 0.2782118055555556 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:11 PM - 0: missing 2 resources: cocoa, rubber
+16 Oct 2020 7:41:11 PM - 0: too few sea tiles: 0.2528211805555556 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:11 PM - 0: bad peak altitude: 4783 < 5000
+16 Oct 2020 7:41:11 PM - 0: too many sea tiles: 0.4865451388888889 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:12 PM - 0: bad peak altitude: 4704 < 5000
+16 Oct 2020 7:41:12 PM - 0: too few sea tiles: 0.3001302083333333 not in [0.35, 0.45000002]
+16 Oct 2020 7:41:12 PM - 0: 17 failures

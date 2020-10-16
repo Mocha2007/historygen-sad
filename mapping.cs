@@ -6,10 +6,10 @@ using Microsoft.Xna.Framework;
 
 namespace Mappings {
 	static class Mapping {
-		static readonly Tuple<string, Func<WorldTile, char>>[] char_modes = new Tuple<string, Func<WorldTile, char>>[]{
-			new Tuple<string, Func<WorldTile, char>>("Altitude", CharAltitude),
-			new Tuple<string, Func<WorldTile, char>>("Block", CharBlock),
-			new Tuple<string, Func<WorldTile, char>>("Dwarf Fortress", CharDF),
+		static readonly Tuple<string, Func<WorldTile, int>>[] char_modes = new Tuple<string, Func<WorldTile, int>>[]{
+			new Tuple<string, Func<WorldTile, int>>("Altitude", CharAltitude),
+			new Tuple<string, Func<WorldTile, int>>("Block", CharBlock),
+			new Tuple<string, Func<WorldTile, int>>("Dwarf Fortress", CharDF),
 		};
 		static readonly Tuple<string, Func<WorldTile, Color>>[] color_modes = new Tuple<string, Func<WorldTile, Color>>[]{
 			new Tuple<string, Func<WorldTile, Color>>("Default", ColorDefault),
@@ -39,7 +39,7 @@ namespace Mappings {
 			Color.DarkMagenta,		// 6
 			Color.Magenta			// 7
 		};
-		public static Func<WorldTile, char> char_mode {
+		public static Func<WorldTile, int> char_mode {
 			get { return Mapping.char_modes[selected_char_mode].Item2; }
 		}
 		public static Func<WorldTile, Color> color_mode {
@@ -68,27 +68,27 @@ namespace Mappings {
 			selected_color_mode = color_modes.Length-1;
 		}
 		// char selectors
-		static char CharAltitude(WorldTile w){
+		static int CharAltitude(WorldTile w){
 			// uses df-inspired legend
 			if (w.isLand){
 				// write symbol
 				if (5000 < w.elevation)
-					return '▲';
+					return 30;
 				if (WorldTile.mountain_altitude < w.elevation)
-					return '⌂';
+					return 127;
 				if (w.climate[0] == 'E')
-					return '▓';
+					return 178;
 				if (2000 < w.elevation)
-					return '∩';
+					return 239;
 				if (1000 < w.elevation)
 					return 'n';
 				if (500 < w.elevation)
-					return  'ⁿ';
+					return  252;
 				return '.';
 			}
 			// sea tiles
 			if (w.temperature.Max() < -200) // freezing point of seawater
-				return '▓';
+				return 178;
 			switch (w.oceanicZone[0]){
 				case 'A':
 					return 'v';
@@ -97,39 +97,39 @@ namespace Mappings {
 				case 'H':
 					return 'V';
 				default:
-					return '≈';
+					return 247;
 			}
 		}
-		static char CharBlock(WorldTile w){
-			return '█';
+		static int CharBlock(WorldTile w){
+			return 219;
 		}
-		static char CharDF(WorldTile w){
+		static int CharDF(WorldTile w){
 			// uses df legend
 			// freezing point of seawater
 			if (!w.isLand)
-				return w.temperature.Max() < -200 ? '▒' : '≈';
+				return w.temperature.Max() < -200 ? 177 : 247;
 			// land
 			// mountains
 			if (4000 <= w.elevation)
-				return '▲';
+				return 30;
 			if (WorldTile.mountain_altitude <= w.elevation)
-				return '⌂';
+				return 127;
 			// non-mountains
 			Tuple<int, int> h = w.holdridgeCoords;
 			if (h.Item1 + h.Item2 < -4 && w.average_temperature < 1000) // glacier
-				return '▓';
+				return 178;
 			if (h.Item1 + h.Item2 == -4) // tundra
 				return '.';
 			if (h.Item1 < 0){ // forests
 				switch (h.Item1+h.Item2){
 					case -3:
-						return h.Item1 < -2 ? '↨' : '↑';
+						return h.Item1 < -2 ? 23 : 24;
 					case -2:
-						return '♣';
+						return 5;
 					case -1:
-						return '♠';
+						return 6;
 					default:
-						return 'Γ';
+						return 226;
 				}
 			}
 			if (-4 < h.Item2){ // shrubland grassland savanna
@@ -137,15 +137,15 @@ namespace Mappings {
 					case -3:
 						return '.';
 					case -2:
-						return 'ⁿ';
+						return 252;
 					case -1:
 						return '"';
 					default:
-						return 'τ';
+						return 231;
 				}
 			}
 			// deserts
-			return w.elevation < 1000 ? '~' : '≈';
+			return w.elevation < 1000 ? '~' : 247;
 		}
 		// coloration
 		// todo: pure df legend; works exactly like DF

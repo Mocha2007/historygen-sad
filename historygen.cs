@@ -18,18 +18,6 @@ class Program {
 	public static Random rng;
 	public static int seed;
 	public static double precomputed_altitude_cutoff;
-	public static readonly ConsoleColor[] heatmapGradient = new ConsoleColor[]{
-		ConsoleColor.Gray,
-		ConsoleColor.White,
-		ConsoleColor.DarkGreen,
-		ConsoleColor.Green,
-		ConsoleColor.DarkYellow,
-		ConsoleColor.Yellow,
-		ConsoleColor.DarkRed,
-		ConsoleColor.Red,
-		ConsoleColor.DarkMagenta,
-		ConsoleColor.Magenta,
-	};
 	public static readonly byte tooltip_width = 32;
 	public static Console console;
 	static void Main(string[] args){
@@ -597,7 +585,7 @@ class WorldTile {
 		Tuple<double, double, double> xyz = Program.LatLong2Spherical(y*Math.PI, x*Math.PI);
 		return p < Simplex.OctaveNoise(xyz.Item1 + offset, xyz.Item2 + offset, xyz.Item3 + offset, 0, octaves);
 	}
-	public void Print(Func<WorldTile, Color> Coloration, Func<WorldTile, char> CharSelector, int x, int y){
+	public void Print(Func<WorldTile, Color> Coloration, Func<WorldTile, int> CharSelector, int x, int y){
 		Program.console.SetGlyph(x, y, CharSelector(this), Coloration(this));
 	}
 	// SELECTION TOOLTIP
