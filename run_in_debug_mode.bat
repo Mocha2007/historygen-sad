@@ -1,0 +1,1 @@
+historygen -d

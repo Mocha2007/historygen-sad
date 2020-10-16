@@ -1,0 +1,1 @@
+historygen -char -1 -color -2
