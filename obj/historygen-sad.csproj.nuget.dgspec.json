@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Github\\csbs\\historygen-sad\\historygen-sad.csproj": {}
+    "D:\\Github\\historygen-sad\\historygen-sad.csproj": {}
   },
   "projects": {
-    "D:\\Github\\csbs\\historygen-sad\\historygen-sad.csproj": {
+    "D:\\Github\\historygen-sad\\historygen-sad.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Github\\csbs\\historygen-sad\\historygen-sad.csproj",
+        "projectUniqueName": "D:\\Github\\historygen-sad\\historygen-sad.csproj",
         "projectName": "historygen-sad",
-        "projectPath": "D:\\Github\\csbs\\historygen-sad\\historygen-sad.csproj",
+        "projectPath": "D:\\Github\\historygen-sad\\historygen-sad.csproj",
         "packagesPath": "C:\\Users\\Jarrett\\.nuget\\packages\\",
-        "outputPath": "D:\\Github\\csbs\\historygen-sad\\obj\\",
+        "outputPath": "D:\\Github\\historygen-sad\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Jarrett\\AppData\\Roaming\\NuGet\\NuGet.Config"

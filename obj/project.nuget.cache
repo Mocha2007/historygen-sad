@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "r29qH0ytfDR+dNzqN7hy2JmGjWy3smAfh+lbP/th/MF+6B6UcQBATiC18fFw2JErE8T3vOMdbX+sWmq2S/YyRg==",
+  "dgSpecHash": "CCUtge2lZi8TcozPEuAMU5a4pbhIuNv6+I5XJ3l+OWhfEjqNQS/ZLovr6tmFJfmFGHpJK8qVIfutyhsWfNpXeQ==",
   "success": true,
-  "projectFilePath": "D:\\Github\\csbs\\historygen-sad\\historygen-sad.csproj",
+  "projectFilePath": "D:\\Github\\historygen-sad\\historygen-sad.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jarrett\\.nuget\\packages\\monogame.content.builder.task\\3.8.0.1641\\monogame.content.builder.task.3.8.0.1641.nupkg.sha512",
     "C:\\Users\\Jarrett\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.0.1641\\monogame.framework.desktopgl.3.8.0.1641.nupkg.sha512",

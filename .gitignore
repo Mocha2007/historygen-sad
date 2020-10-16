@@ -1,0 +1,5 @@
+.vscode/*
+obj/*
+Content/*
+bin/*
+log.txt
