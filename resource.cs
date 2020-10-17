@@ -32,7 +32,7 @@ namespace Resources {
 
 	}
 	class Resource {
-		static readonly Color DarkYellow = new Color(0x80800000);
+		static readonly Color DarkYellow = new Color(128, 128, 0);
 		public static readonly List<Resource> resources = new List<Resource>();
 		public readonly string name;
 		/// <summary>

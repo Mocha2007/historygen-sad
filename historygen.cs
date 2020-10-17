@@ -20,6 +20,7 @@ class Program {
 	public static double precomputed_altitude_cutoff;
 	public static readonly byte tooltip_width = 32;
 	public static Console console;
+	public static World world;
 	static void Main(string[] args){
 		Game.Create(World.size*2+tooltip_width, World.size);
 		Game.Instance.Window.Title = "Mocha's History Generator";
@@ -55,8 +56,8 @@ class Program {
 		console.Components.Add(new Mokey());
 		Global.CurrentScreen = console;
 		// gen world
-		World w = World.Random();
-		w.Print();
+		world = World.Random();
+		world.Print();
 		// display...?
 	}
 	public static void NewSeed(bool change_seed){
@@ -125,6 +126,9 @@ class Program {
 	public static double Clamp(double x, double min, double max){
 		return Math.Min(max, Math.Max(min, x));
 	}
+	public static int Clamp(int x, int min, int max){
+		return (int)Clamp((double)x, min, max);
+	}
 	// theta is lat; phi is lon
 	public static Tuple<double, double, double> LatLong2Spherical(double latitude, double longitude){
 		double x = Math.Sin(latitude) * Math.Cos(longitude);
@@ -164,7 +168,8 @@ class World {
 	static int tileCount {
 		get { return size * size * 2; }
 	}
-	static int cursor_x, cursor_y;
+	static int cursor_x = size;
+	static int cursor_y = size/2;
 	// static methods
 	public static World Random(){
 		WorldTile[,] w = new WorldTile[size, size*2];
@@ -242,37 +247,50 @@ class World {
 		return true;
 	}
 	// non-static methods
-	void Draw(){
-		// long t_start = DateTime.Now.Ticks;
+	public static void MoveCursor(int x, int y){
+		// replace old location
+		Program.world.tiles[cursor_y, cursor_x].Print(Mapping.color_mode, Mapping.char_mode, cursor_x, cursor_y);
+		// move cursor
+		cursor_x = Program.Mod(cursor_x+x, size*2);
+		cursor_y = Program.Clamp(cursor_y+y, 0, size-1);
+		// draw cursor
+		Program.console.SetGlyph(cursor_x, cursor_y, 'X', Color.Magenta);
+		// tooltip
+		Program.world.RedrawTooltip();
+	}
+	public static void Zoom(int z){
+		if (0 < z){
+			if (WorldTile.minimap_scale < 32){
+				WorldTile.octaves++;
+				WorldTile.minimap_scale *= 2;
+			}
+			Zoom(z-1);
+		}
+		else if (z < 0){
+			if (1 < WorldTile.minimap_scale){
+				WorldTile.octaves--;
+				WorldTile.minimap_scale /= 2;
+			}
+			Zoom(z+1);
+		}
+		// else pass
+		Program.world.RedrawTooltip();
+	}
+	public void Print(){
+		// big map
 		Program.console.Clear();
 		for (byte y = 0; y < size; y++)
 			for (short x = 0; x < size*2; x++)
 				tiles[y, x].Print(Mapping.color_mode, Mapping.char_mode, x, y);
-		// Console.CursorLeft = 0;
-		// Console.CursorTop = 0;
-		// Program.Log((DateTime.Now.Ticks - t_start)/1e7);
+		// highlight selection
+		MoveCursor(0, 0);
+		// display tooltip for thing
+		RedrawTooltip();
 	}
-	public static void MoveCursor(int x, int y){
-		cursor_x = Program.Mod(cursor_x+x, size*2);
-		cursor_y = Program.Mod(cursor_y+y, size*2);
-	}
-	public void Print(){
-		Draw();
-		// MAIN INTERACTIVITY LOOP
-		int cursor_x = size;
-		int cursor_y = size/2;
-		// cover up where the map cursor used to be
-		Action CoverHighlight = () => tiles[cursor_y, cursor_x].Print(Mapping.color_mode, Mapping.char_mode, cursor_x, cursor_y);
-		while (true){
-			// highlight selection
-			Program.console.SetGlyph(cursor_x, cursor_y, 'X', Color.Magenta);
-			// display tooltip for thing
-			WorldTile selection = tiles[cursor_y, cursor_x];
-			ClearTooltip();
-			selection.Tooltip();
-			// todo: check if cursor keys pressed
-			break;
-		}
+	void RedrawTooltip(){
+		WorldTile selection = tiles[cursor_y, cursor_x];
+		ClearTooltip();
+		selection.Tooltip();
 	}
 	static void ClearTooltip(){
 		Program.console.Fill(new Rectangle(size*2, 0, Program.tooltip_width, size), Color.Gray, Color.Black, 0, 0);
@@ -672,3 +690,6 @@ class WorldTile {
 		);
 	}
 }
+/* todo list
+- fix all references of instance world in static world functions
+*/

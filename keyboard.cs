@@ -2,57 +2,37 @@ using SadConsole.Components;
 // using SadConsole.Input;
 using Microsoft.Xna.Framework.Input;
 using Keyboard = SadConsole.Input.Keyboard;
+using Mappings;
 class Mokey : KeyboardConsoleComponent
 {
 	public override void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled)
 	{
 		handled = true;
+		// movement keys can use else ifs since they are contradictory
 		if (info.IsKeyPressed(Keys.Left))
 			World.MoveCursor(-1, 0);
+		else if (info.IsKeyPressed(Keys.Right))
+			World.MoveCursor(1, 0);
+		if (info.IsKeyPressed(Keys.Up))
+			World.MoveCursor(0, -1);
+		else if (info.IsKeyPressed(Keys.Down))
+			World.MoveCursor(0, 1);
+		// ditto for zoom keys
+		if (info.IsKeyPressed(Keys.OemPlus))
+			World.Zoom(1);
+		else if (info.IsKeyPressed(Keys.OemMinus))
+			World.Zoom(-1);
+		// other keys can be pressed simultaneously
+		if (info.IsKeyPressed(Keys.X)){
+			Mapping.CycleChar();
+			Program.world.Print();
+		}
+		if (info.IsKeyPressed(Keys.Z)){
+			Mapping.CycleColor();
+			Program.world.Print();
+		}
+		if (info.IsKeyPressed(Keys.Escape)){
+			Program.Exit();
+		}
 	}
 }
-/*
-			switch (Console.ReadKey().Key){
-				case ConsoleKey.LeftArrow:
-					CoverHighlight();
-					cursor_x = Program.Mod(cursor_x-1, size*2);
-					break;
-				case ConsoleKey.RightArrow:
-					CoverHighlight();
-					cursor_x = Program.Mod(cursor_x+1, size*2);
-					break;
-				case ConsoleKey.UpArrow:
-					CoverHighlight();
-					if (0 < cursor_y)
-						cursor_y--;
-					break;
-				case ConsoleKey.DownArrow:
-					CoverHighlight();
-					if (cursor_y < size - 1)
-						cursor_y++;
-					break;
-				case ConsoleKey.OemPlus:
-					if (WorldTile.minimap_scale < 32){
-						WorldTile.octaves++;
-						WorldTile.minimap_scale *= 2;
-					}
-					break;
-				case ConsoleKey.OemMinus:
-					if (1 < WorldTile.minimap_scale){
-						WorldTile.octaves--;
-						WorldTile.minimap_scale /= 2;
-					}
-					break;
-				case ConsoleKey.X:
-					Mapping.CycleChar();
-					Draw();
-					break;
-				case ConsoleKey.Z:
-					Mapping.CycleColor();
-					Draw();
-					break;
-				case ConsoleKey.Escape:
-					Program.Exit();
-					break;
-			}
-*/

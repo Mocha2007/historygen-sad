@@ -25,7 +25,7 @@ namespace Mappings {
 		};
 		static int selected_char_mode = 0;
 		static int selected_color_mode = 0;
-		static readonly Color DarkYellow = new Color(0x80800000);
+		static readonly Color DarkYellow = new Color(128, 128, 0);
 		/// <summary>
 		/// 8 colors (least to greatest) for heatmap-like colormodes; this is similar to typical doppler colors
 		/// </summary>
