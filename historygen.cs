@@ -25,6 +25,7 @@ class Program {
 		Game.Create(World.size*2+tooltip_width, World.size);
 		Game.Instance.Window.Title = "Mocha's History Generator";
 		Game.OnInitialize = InitializeConsole;
+		Global.KeyboardState.InitialRepeatDelay /= 2;
 		// mapcolor args
 		if (args.Contains("-d")) // debug mode
 			Mapping.Debug();
