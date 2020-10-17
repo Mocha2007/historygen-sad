@@ -489,7 +489,7 @@ class WorldTile {
 			List<int> ds = new List<int>{a-b1, a-b2, a-b3, a-b4}.ToList();
 			int d = ds.Max();
 			// points downhill
-			char c = "><^v"[ds.IndexOf(d)]; // todo →←↓↑
+			char c = (char)new int[]{26, 27, 25, 24}[ds.IndexOf(d)]; // todo →←↓↑
 			return new Tuple<double, char>(d / 1000.0, c);
 		}
 	}
@@ -600,11 +600,13 @@ class WorldTile {
 		// climate
 		Print(isLand ? String.Format("Climate: {0}", climate) : String.Format("Zone: {0}", oceanicZone));
 		// biome
+		char infinity = (char)236; // ∞
+		char deg = (char)248; // °
 		if (isLand){
 			Tuple<int, int> hc = holdridgeCoords;
 			string holdridge_string = String.Format("Biome: {0} ({1}, {2})", holdridge,
-				hc.Item1 <= -69 ? "-inf" : hc.Item1.ToString(), // todo ∞
-				hc.Item2 <= -69 ? "-inf" : hc.Item2.ToString()); // todo ∞
+				hc.Item1 <= -69 ? "-"+infinity : hc.Item1.ToString(),
+				hc.Item2 <= -69 ? "-"+infinity : hc.Item2.ToString());
 			Print(holdridge_string);
 		}
 		// elevation
@@ -613,11 +615,11 @@ class WorldTile {
 		Tuple<double, char> s = slope;
 		Print(String.Format("Slope: {1} {0}%", s.Item1*100, s.Item2));
 		// temperature
-		Print(String.Format("Temperature: avg. {0:.##} C", average_temperature/100.0)); // todo °
-		Print(String.Format("\tin [{0:.##} C, {1:.##} C]", temperature.Min()/100.0, temperature.Max()/100.0)); // todo °
+		Print(String.Format("Temperature: avg. {0:.##}{1}C", average_temperature/100.0, deg));
+		Print(String.Format("  in [{0:.##}{2}C, {1:.##}{2}C]", temperature.Min()/100.0, temperature.Max()/100.0, deg));
 		// rainfall
 		Print(String.Format("Rainfall: tot. {0} mm", annual_rainfall));
-		Print(String.Format("\tin [{0} mm, {1} mm]", rainfall.Min(), rainfall.Max()));
+		Print(String.Format("  in [{0} mm, {1} mm]", rainfall.Min(), rainfall.Max()));
 		double pe = Math.Round(potential_evaporation);
 		Print(String.Format("PE: {0} mm ({1:.###})", pe, pe/annual_rainfall));
 		// Resource(s)
