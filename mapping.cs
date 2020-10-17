@@ -25,18 +25,17 @@ namespace Mappings {
 		};
 		static int selected_char_mode = 0;
 		static int selected_color_mode = 0;
-		static readonly Color DarkYellow = new Color(128, 128, 0);
 		/// <summary>
 		/// 8 colors (least to greatest) for heatmap-like colormodes; this is similar to typical doppler colors
 		/// </summary>
 		static readonly Color[] heat = new Color[]{
-			Color.DarkGreen,		// 0
-			Color.Green,			// 1
-			DarkYellow,				// 2
+			Color.Green,			// 0
+			Color.Lime,				// 1
+			Color.Olive,			// 2
 			Color.Yellow,			// 3
-			Color.DarkRed,			// 4
+			Color.Maroon,			// 4
 			Color.Red,				// 5
-			Color.DarkMagenta,		// 6
+			Color.Purple,			// 6
 			Color.Magenta			// 7
 		};
 		public static Func<WorldTile, int> char_mode {
@@ -182,32 +181,32 @@ namespace Mappings {
 			if (w.isLand){
 				// get color
 				if (5000 < w.elevation)
-					return Color.DarkGray;
-				if (3000 < w.elevation)
 					return Color.Gray;
+				if (3000 < w.elevation)
+					return Color.Silver;
 				if (w.climate[0] == 'A')
-					return Color.DarkGreen;
+					return Color.Green;
 				if (w.climate == "BWh")
 					return Color.Red;
 				if (w.climate == "BWk")
-					return Color.DarkRed;
+					return Color.Maroon;
 				if (w.climate == "BSh")
 					return Color.Yellow;
 				if (w.climate == "BSk")
-					return DarkYellow;
+					return Color.Olive;
 				if (w.climate[0] == 'D' || w.climate[0] == 'E')
 					return Color.Cyan;
-				return Color.Green;
+				return Color.Lime;
 			}
 			// sea
 			if (w.temperature.Max() < -200) // freezing point of seawater
-				return Color.DarkCyan;
+				return Color.Teal;
 			switch (w.oceanicZone[0]){
 				case 'E':
 				case 'M':
 					return Color.Blue;
 				default:
-					return Color.DarkBlue;
+					return Color.Navy;
 			}
 		}
 		static Color ColorDF(WorldTile w){
@@ -218,17 +217,17 @@ namespace Mappings {
 			// land
 			// mountains
 			if (4000 <= w.elevation && w.elevation < 5000)
-				return Color.DarkGray;
-			if (WorldTile.mountain_altitude <= w.elevation)
 				return Color.Gray;
+			if (WorldTile.mountain_altitude <= w.elevation)
+				return Color.Silver;
 			// non-mountains
 			Tuple<int, int> h = w.holdridgeCoords;
 			if (h.Item1 + h.Item2 < -3 && w.average_temperature < 1000) // glacier + tundra
 				return Color.Cyan;
 			if (h.Item1 < 0) // forests
-				return Color.DarkGreen;
+				return Color.Green;
 			if (-4 < h.Item2) // shrubland grassland savanna
-				return h.Item1 == 0 ? Color.Green : Color.Yellow;
+				return h.Item1 == 0 ? Color.Lime : Color.Yellow;
 			// deserts
 			switch (h.Item1){
 				case 1:
@@ -236,7 +235,7 @@ namespace Mappings {
 				case 2:
 					return Color.Red;
 				case 3:
-					return Color.DarkGray;
+					return Color.Gray;
 				default:
 					return Color.White;
 			}
@@ -262,7 +261,7 @@ namespace Mappings {
 			if (k == "Csa" || k == "Csb")
 				return Color.Yellow;
 			if (k.Substring(0, 2) == "Cs")
-				return DarkYellow;
+				return Color.Olive;
 			if (k[1] == 'w')
 				return Color.DarkBlue;
 			if (k == "Dfa" || k == "Dfb")
@@ -363,8 +362,8 @@ namespace Mappings {
 				
 		}
 		static Color ColorTest(WorldTile w){
-			return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Green : Color.Red;
-			// return !w.isLand ? Color.Blue : Resource.silk.TileTest(w) ? Color.Green : Color.Red;
+			return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Lime : Color.Red;
+			// return !w.isLand ? Color.Blue : Resource.silk.TileTest(w) ? Color.Lime : Color.Red;
 		}
 	}
 }

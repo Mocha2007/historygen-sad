@@ -82,7 +82,7 @@ class Program {
 				console.Print(0, 0, "[info] ", Color.Cyan, Color.Black);
 				break;
 		}
-		console.Print(0, 7, message.ToString(), Color.Gray, Color.Black);
+		console.Print(0, 7, message.ToString(), Color.Silver, Color.Black);
 		File.AppendAllText("log.txt", String.Format("{0} - {1}: {2}\r\n", DateTime.Now, level, message));
 	}
 	public static void Log(object message){
@@ -293,7 +293,7 @@ class World {
 		selection.Tooltip();
 	}
 	static void ClearTooltip(){
-		Program.console.Fill(new Rectangle(size*2, 0, Program.tooltip_width, size), Color.Gray, Color.Black, 0, 0);
+		Program.console.Fill(new Rectangle(size*2, 0, Program.tooltip_width, size), Color.Silver, Color.Black, 0, 0);
 	}
 }
 
@@ -618,7 +618,7 @@ class WorldTile {
 		int left = World.size*2;
 		int top = 0;
 		Action<string> Print = s => {
-			Program.console.Print(left, top, s, Color.Gray);
+			Program.console.Print(left, top, s, Color.Silver);
 			top++;
 		};
 		Print(isLand ? "Land" : "Sea");
@@ -670,7 +670,7 @@ class WorldTile {
 		int left = World.size*2 + 1;
 		int top = World.size - size - 5;
 		Action<string> Print = s => {
-			Program.console.Print(left, top, s, Color.Gray);
+			Program.console.Print(left, top, s, Color.Silver);
 			top++;
 		};
 		// show minimap info
