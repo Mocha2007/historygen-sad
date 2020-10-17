@@ -206,9 +206,9 @@ namespace Noise {
 			for (short i = 0; i < 10000; i++){
 				Program.NewSeed();
 				data.Add(Simplex.Noise(
-					Program.rng.NextDouble(),
-					Program.rng.NextDouble(),
-					Program.rng.NextDouble(),
+					Program.rng.NextDouble()*2-1,
+					Program.rng.NextDouble()*2-1,
+					Program.rng.NextDouble()*2-1,
 					0 // altitude gen does not use this variable
 				));
 			}

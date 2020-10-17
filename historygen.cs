@@ -42,11 +42,6 @@ class Program {
 			if (args.Contains("-color"))
 				Mapping.CycleColor(int.Parse(args[args.ToList().IndexOf("-color")+1]));
 		}
-		// compute altitude cutoff
-		seed = (int)DateTime.Now.Ticks;
-		rng = new Random(seed);
-		List<double> pac_data = Simplex.Test().Select(x => Math.Pow(x, WorldTile.altitude_exponent)).ToList();
-		precomputed_altitude_cutoff = Percentile(pac_data, WorldTile.desiredSeaFraction);
 		// seed arg
 		if (args.Contains("-s")){
 			seed = int.Parse(args[args.ToList().IndexOf("-s")+1]);
@@ -63,13 +58,19 @@ class Program {
 		console.IsFocused = true;
 		console.Components.Add(new Mokey());
 		Global.CurrentScreen = console;
-		// gen world
-		long t_start = DateTime.Now.Ticks;
-		world = World.Random();
-		long t_end = DateTime.Now.Ticks;
-		Program.Log(String.Format("worldgen took {0} ms", (t_end - t_start)/1e4));
-		world.Print();
-		// display...?
+		new Task(() => { // do async so the window immediately shows up
+			// compute altitude cutoff
+			seed = (int)DateTime.Now.Ticks;
+			rng = new Random(seed);
+			List<double> pac_data = Simplex.Test().Select(x => Math.Pow(x, WorldTile.altitude_exponent)).ToList();
+			precomputed_altitude_cutoff = Percentile(pac_data, WorldTile.desiredSeaFraction);
+			// gen world
+			long t_start = DateTime.Now.Ticks;
+			world = World.Random();
+			long t_end = DateTime.Now.Ticks;
+			Program.Log(String.Format("worldgen took {0} ms", (t_end - t_start)/1e4));
+			world.Print();
+		}).Start();
 	}
 	public static void NewSeed(bool change_seed){
 		// Log(String.Format("seed {0} failed", seed), 1);
@@ -83,7 +84,7 @@ class Program {
 	}
 	public static void Log(object message, byte level){
 		// log in file
-		File.AppendAllText("log.txt", String.Format("{0} - {1}: {2}\r\n", DateTime.Now, level, message));
+		File.AppendAllText("log.txt", String.Format("{0} {1} ms - {2}: {3}\r\n", DateTime.Now, DateTime.Now.Millisecond, level, message));
 		// clear log
 		console.Fill(new Rectangle(0, window_height - log_history.Length, window_width, log_history.Length), Color.Silver, Color.Black, 0, 0);
 		for (int i = log_history.Length-1; 0 <= i; i--){
@@ -184,7 +185,7 @@ class Program {
 }
 class World {
 	public static readonly byte size = 64;
-	static readonly float seaFraction_tolerance = 0.05F;
+	static readonly float seaFraction_tolerance = 0.1F;
 	static readonly short min_highest_peak_altitude = 5000;
 	readonly WorldTile[,] tiles;
 	World(WorldTile[,] tiles){
@@ -350,7 +351,7 @@ class WorldTile {
 	Resource resource_cache;
 	readonly short[] rainfall;
 	public readonly short[] temperature;
-	public static readonly float desiredSeaFraction = 0.4F; // 0.4 is about perfect; must be in (0, 0.92]
+	public static readonly float desiredSeaFraction = 0.45F; // 0.4 is about perfect; must be in (0, 0.92]
 	public static readonly short mountain_altitude = 3000; // for rain shadows
 	// alt
 	public static readonly double altitude_exponent = 1.2; // in my experience, has the lowest failure rate
