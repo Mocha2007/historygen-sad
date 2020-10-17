@@ -641,10 +641,9 @@ class WorldTile {
 		double pe = Math.Round(potential_evaporation);
 		Print(String.Format("PE: {0} mm ({1:.###})", pe, pe/annual_rainfall));
 		// Resource(s)
-		if (isLand){
+		if (isLand)
 			Print(String.Format("Resource: {0}", resource == null ? "null" : resource.name));
-			Print(String.Format("PRs: {0}", Resource.PrettyList(potential_resources)));
-		}
+		// Print(String.Format("PRs: {0}", Resource.PrettyList(potential_resources)));
 		// minimap
 		DrawMinimap();
 	}
