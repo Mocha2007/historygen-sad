@@ -87,7 +87,7 @@ namespace Mappings {
 					return 'n';
 				if (500 < w.elevation)
 					return  252;
-				return '.';
+				return 7; // •
 			}
 			// sea tiles
 			if (w.temperature.Max() < -200) // freezing point of seawater
