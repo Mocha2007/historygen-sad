@@ -209,7 +209,7 @@ namespace Noise {
 					Program.rng.NextDouble(),
 					Program.rng.NextDouble(),
 					Program.rng.NextDouble(),
-					Program.rng.NextDouble()
+					0 // altitude gen does not use this variable
 				));
 			}
 			return data.ToArray();

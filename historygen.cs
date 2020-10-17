@@ -64,7 +64,10 @@ class Program {
 		console.Components.Add(new Mokey());
 		Global.CurrentScreen = console;
 		// gen world
+		long t_start = DateTime.Now.Ticks;
 		world = World.Random();
+		long t_end = DateTime.Now.Ticks;
+		Program.Log(String.Format("worldgen took {0} ms", (t_end - t_start)/1e4));
 		world.Print();
 		// display...?
 	}
