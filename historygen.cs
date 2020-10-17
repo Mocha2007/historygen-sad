@@ -168,8 +168,8 @@ class World {
 	static int tileCount {
 		get { return size * size * 2; }
 	}
-	static int cursor_x = size;
-	static int cursor_y = size/2;
+	int cursor_x = size;
+	int cursor_y = size/2;
 	// static methods
 	public static World Random(){
 		WorldTile[,] w = new WorldTile[size, size*2];
@@ -247,18 +247,18 @@ class World {
 		return true;
 	}
 	// non-static methods
-	public static void MoveCursor(int x, int y){
+	public void MoveCursor(int x, int y){
 		// replace old location
-		Program.world.tiles[cursor_y, cursor_x].Print(Mapping.color_mode, Mapping.char_mode, cursor_x, cursor_y);
+		tiles[cursor_y, cursor_x].Print(Mapping.color_mode, Mapping.char_mode, cursor_x, cursor_y);
 		// move cursor
 		cursor_x = Program.Mod(cursor_x+x, size*2);
 		cursor_y = Program.Clamp(cursor_y+y, 0, size-1);
 		// draw cursor
 		Program.console.SetGlyph(cursor_x, cursor_y, 'X', Color.Magenta);
 		// tooltip
-		Program.world.RedrawTooltip();
+		RedrawTooltip();
 	}
-	public static void Zoom(int z){
+	public void Zoom(int z){
 		if (0 < z){
 			if (WorldTile.minimap_scale < 32){
 				WorldTile.octaves++;
@@ -274,7 +274,7 @@ class World {
 			Zoom(z+1);
 		}
 		// else pass
-		Program.world.RedrawTooltip();
+		RedrawTooltip();
 	}
 	public void Print(){
 		// big map
@@ -697,5 +697,5 @@ class WorldTile {
 	}
 }
 /* todo list
-- fix all references of instance world in static world functions
+- actually work on the history generator part of the history generator
 */
