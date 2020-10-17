@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic; // dicts
 using System.Linq; // enumerable operations
 using Resources;
 // color
@@ -240,37 +241,40 @@ namespace Mappings {
 					return Color.White;
 			}
 		}
+		static readonly Dictionary<string, Color> koppen = new Dictionary<string, Color>(){
+			{"Af", Color.Blue},
+			{"Am", new Color(0, 120, 255)},
+			{"Aw", new Color(70, 170, 250)},
+			{"BWh", Color.Red},
+			{"BWk", new Color(255, 150, 150)},
+			{"BSh", Color.Orange},
+			{"BSk", new Color(255, 220, 100)},
+			{"Csa", Color.Yellow},
+			{"Csb", new Color(192, 192, 0)},
+			{"Csc", Color.Olive},
+			{"Cwa", new Color(150, 255, 150)},
+			{"Cwb", new Color(99, 199, 100)},
+			{"Cwc", new Color(50, 150, 51)},
+			{"Cfa", new Color(198, 255, 78)},
+			{"Cfb", Color.Lime},
+			{"Cfc", new Color(51, 199, 1)},
+			{"Dsa", Color.Magenta},
+			{"Dsb", new Color(198, 0, 199)},
+			{"Dsc", new Color(150, 50, 149)},
+			{"Dsd", new Color(150, 100, 149)},
+			{"Dwa", new Color(171, 177, 255)},
+			{"Dwb", new Color(90, 119, 219)},
+			{"Dwc", new Color(76, 81, 181)},
+			{"Dwd", new Color(50, 0, 135)},
+			{"Dfa", Color.Cyan},
+			{"Dfb", new Color(56, 199, 255)},
+			{"Dfc", Color.Teal},
+			{"Dfd", new Color(0, 69, 94)},
+			{"EF", Color.Gray},
+			{"ET", Color.Silver},
+		};
 		static Color ColorKoppen(WorldTile w){
-			if (!w.isLand)
-				return Color.White;
-			string k = w.climate;
-			if (k[0] == 'A')
-				return Color.Blue;
-			if (k == "ET")
-				return Color.Gray;
-			if (k == "EF")
-				return Color.DarkGray;
-			if (k.Substring(0, 2) == "BW")
-				return Color.DarkRed;
-			if (k[0] == 'B')
-				return Color.Red;
-			if (k.Substring(0, 2) == "Cf")
-				return Color.Green;
-			if (k.Substring(0, 2) == "Cw")
-				return Color.DarkGreen;
-			if (k == "Csa" || k == "Csb")
-				return Color.Yellow;
-			if (k.Substring(0, 2) == "Cs")
-				return Color.Olive;
-			if (k[1] == 'w')
-				return Color.DarkBlue;
-			if (k == "Dfa" || k == "Dfb")
-				return Color.Cyan;
-			if (k.Substring(0, 2) == "Df")
-				return Color.DarkCyan;
-			if (k == "Dsa" || k == "Dsb")
-				return Color.Magenta;
-			return Color.DarkMagenta;
+			return w.isLand ? koppen[w.climate] : Color.White;
 		}
 		static Color ColorPrecipitation(WorldTile w){
 			if (!w.isLand)

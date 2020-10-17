@@ -698,5 +698,4 @@ class WorldTile {
 }
 /* todo list
 - fix all references of instance world in static world functions
-- fix remaining colors in mapping.cs
 */
