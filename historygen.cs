@@ -333,22 +333,22 @@ class WorldTile {
 	public static readonly short mountain_altitude = 3000; // for rain shadows
 	// alt
 	public static readonly double altitude_exponent = 1.2; // in my experience, has the lowest failure rate
-	static readonly short altitude_min = -11000;
-	static readonly short altitude_max = 9000;
+	public static readonly short altitude_min = -11000;
+	public static readonly short altitude_max = 9000;
 	static readonly byte altitude_scale = 1;
 	// rf
 	// 5 generates a realistic amount of magenta-level regions
 	// 9 is too large, and worlds don't gen with all the climates needed.
 	static readonly double rainfall_exponent = 5;
 	// world avg. is 990 mm annually, thus the max must maintain that average
-	static readonly short rainfall_max = 2200;
+	public static readonly short rainfall_max = 2200;
 	static readonly byte rainfall_scale = 2;
 	// temp
-	static readonly short temperature_min = -2400;
-	static readonly short temperature_max = 2600;
+	public static readonly short temperature_min = -2400;
+	public static readonly short temperature_max = 2600;
 	static readonly byte temperature_scale_geographic = 5;
 	static readonly byte temperature_scale_seasonal = 5;
-	static readonly short temperature_anomaly = 4000;
+	public static readonly short temperature_anomaly = 4000;
 	WorldTile(double x, double y, short elevation, short[] rainfall){
 		double raw_heat = Math.Sin(Math.PI * y); // heat, [0, 1]
 		temperature = new short[12];

@@ -17,7 +17,7 @@ namespace Mappings {
 			new Tuple<string, Func<WorldTile, Color>>("Altitude", ColorAltitude),
 			new Tuple<string, Func<WorldTile, Color>>("Biome", ColorHoldridge),
 			new Tuple<string, Func<WorldTile, Color>>("Climate", ColorKoppen),
-			new Tuple<string, Func<WorldTile, Color>>("Potential ET Ratio", ColorPETRatio),
+			// new Tuple<string, Func<WorldTile, Color>>("Potential ET Ratio", ColorPETRatio),
 			new Tuple<string, Func<WorldTile, Color>>("Precipitation", ColorPrecipitation),
 			new Tuple<string, Func<WorldTile, Color>>("Resource", ColorResource),
 			new Tuple<string, Func<WorldTile, Color>>("Temperature", ColorTemperature),
@@ -27,19 +27,6 @@ namespace Mappings {
 		};
 		static int selected_char_mode = 0;
 		static int selected_color_mode = 0;
-		/// <summary>
-		/// 8 colors (least to greatest) for heatmap-like colormodes; this is similar to typical doppler colors
-		/// </summary>
-		static readonly Color[] heat = new Color[]{
-			Color.Green,			// 0
-			Color.Lime,				// 1
-			Color.Olive,			// 2
-			Color.Yellow,			// 3
-			Color.Maroon,			// 4
-			Color.Red,				// 5
-			Color.Purple,			// 6
-			Color.Magenta			// 7
-		};
 		public static Func<WorldTile, int> char_mode {
 			get { return Mapping.char_modes[selected_char_mode].Item2; }
 		}
@@ -69,6 +56,26 @@ namespace Mappings {
 		public static void Debug(){
 			selected_char_mode = 1;
 			selected_color_mode = color_modes.Length-1;
+		}
+		/// <summary>
+		/// x < 0 => sea; [-1, 0) [dark blue, blue, cyan)
+		/// else land; d. green -> green -> yellow -> red -> magenta [0, 1]
+		/// the discontinuity at 0 is intentional and is for clarity
+		/// </summary>
+		static Color Heat(double x){
+			x = Program.Clamp(x, -1, 1);
+			if (x < -0.5) // dark blue -> blue
+				return new Color(0, 0, (int)Program.Remap(x, -1, -0.5, 128, 255));
+			if (x < 0) // blue -> cyan
+				return new Color(0, (int)Program.Remap(x, -0.5, 0, 0, 255), 255);
+			if (x < 0.25) // dark green -> green
+				return new Color(0, (int)Program.Remap(x, 0, 0.25, 128, 255), 0);
+			if (x < 0.5) // green -> yellow
+				return new Color((int)Program.Remap(x, 0.25, 0.5, 0, 255), 255, 0);
+			if (x < 0.75) // yellow -> red
+				return new Color(255, (int)Program.Remap(x, 0.5, 0.75, 255, 0), 0);
+			// red -> magenta
+			return new Color(255, 0, (int)Program.Remap(x, 0.75, 1, 0, 255));
 		}
 		// char selectors
 		static int CharAltitude(WorldTile w){
@@ -151,32 +158,10 @@ namespace Mappings {
 		// coloration
 		// todo: pure df legend; works exactly like DF
 		static Color ColorAltitude(WorldTile w){
-			if (!w.isLand){
-				switch (w.oceanicZone[0]){
-					case 'E':
-					case 'M':
-						return Color.Blue;
-					default:
-						return Color.DarkBlue;
-				}
-			}
-			// DG G DY Y DR R DM M
-			// 0 125 250 500 1000 2000 4000 8000
-			if (8000 <= w.elevation)
-				return heat[7];
-			if (4000 <= w.elevation)
-				return heat[6];
-			if (2000 <= w.elevation)
-				return heat[5];
-			if (1000 <= w.elevation)
-				return heat[4];
-			if (500 <= w.elevation)
-				return heat[3];
-			if (250 <= w.elevation)
-				return heat[2];
-			if (125 <= w.elevation)
-				return heat[1];
-			return heat[0];
+			if (!w.isLand)
+				return Heat(-2000 < w.elevation ? Program.Remap(w.elevation, -2000, 0, -0.5, 0)
+					: Program.Remap(w.elevation, WorldTile.altitude_min, -2000, -1, -0.5));
+			return Heat(Program.Remap(w.elevation, 0, WorldTile.altitude_max, 0, 1));
 		}
 		static Color ColorDefault(WorldTile w){
 			// uses df-inspired legend
@@ -304,24 +289,9 @@ namespace Mappings {
 		static Color ColorPrecipitation(WorldTile w){
 			if (!w.isLand)
 				return Color.White;
-			double r = w.annual_rainfall;
-			if (r < 62.5)
-				return heat[0];
-			if (r < 125)
-				return heat[1];
-			if (r < 250)
-				return heat[2];
-			if (r < 500)
-				return heat[3];
-			if (r < 1000)
-				return heat[4];
-			if (r < 2000)
-				return heat[5];
-			if (r < 4000)
-				return heat[6];
-			return heat[7];
-				
+			return Heat(Program.Remap(Math.Sqrt(w.annual_rainfall), 0, Math.Sqrt(WorldTile.rainfall_max), 0, 1));
 		}
+		/*
 		static Color ColorPETRatio(WorldTile w){
 			int etc = w.holdridgeCoords.Item1;
 			if (!w.isLand)
@@ -343,52 +313,21 @@ namespace Mappings {
 					return heat[etc < 0 ? 7 : 0];
 			}
 				
-		}
+		}*/
 		static Color ColorResource(WorldTile w){
 			return !w.isLand ? Color.Black : w.resource == null ? Color.White : w.resource.color;
 		}
 		static Color ColorTemperature(WorldTile w){
-			double t = w.average_temperature/100; // in celsius, no *100 modifier anymore
 			if (!w.isLand)
 				return Color.White;
-			if (t < -24)
-				return heat[0];
-			if (t < -16)
-				return heat[1];
-			if (t < -8)
-				return heat[2];
-			if (t < 0)
-				return heat[3];
-			if (t < 8)
-				return heat[4];
-			if (t < 16)
-				return heat[5];
-			if (t < 24)
-				return heat[6];
-			return heat[7];
-				
+			double t = w.average_temperature/100; // in celsius, no *100 modifier anymore
+			return Heat(Program.Remap(w.average_temperature, WorldTile.temperature_min, WorldTile.temperature_max, 0, 1));
 		}
 		static Color ColorTemperatureVariation(WorldTile w){
-			Func<int, double> T = x => Math.Pow(1.7, x);
-			double t = (w.temperature.Max() - w.temperature.Min())/100;
 			if (!w.isLand)
 				return Color.White;
-			if (t < 1)
-				return heat[0];
-			if (t < T(1))
-				return heat[1];
-			if (t < T(2))
-				return heat[2];
-			if (t < T(3))
-				return heat[3];
-			if (t < T(4))
-				return heat[4];
-			if (t < T(5))
-				return heat[5];
-			if (t < T(6))
-				return heat[6];
-			return heat[7];
-				
+			int t = w.temperature.Max() - w.temperature.Min();
+			return Heat(Program.Remap(t, 0, WorldTile.temperature_anomaly, 0, 1));
 		}
 		static Color ColorTest(WorldTile w){
 			return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Lime : Color.Red;
