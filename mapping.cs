@@ -75,12 +75,10 @@ namespace Mappings {
 			// uses df-inspired legend
 			if (w.isLand){
 				// write symbol
-				if (5000 < w.elevation)
+				if (4000 < w.elevation)
 					return 30;
 				if (WorldTile.mountain_altitude < w.elevation)
 					return 127;
-				if (w.climate[0] == 'E')
-					return 178;
 				if (2000 < w.elevation)
 					return 239;
 				if (1000 < w.elevation)
