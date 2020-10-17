@@ -17,6 +17,13 @@ class Mokey : KeyboardConsoleComponent
 			Program.world.MoveCursor(0, -1);
 		else if (info.IsKeyPressed(Keys.Down))
 			Program.world.MoveCursor(0, 1);
+		// when released, update the map
+		if (info.IsKeyReleased(Keys.Left)
+			|| info.IsKeyReleased(Keys.Right)
+			|| info.IsKeyReleased(Keys.Up)
+			|| info.IsKeyReleased(Keys.Down)
+			)
+			Program.world.RedrawTooltip();
 		// ditto for zoom keys
 		if (info.IsKeyPressed(Keys.OemPlus))
 			Program.world.Zoom(1);

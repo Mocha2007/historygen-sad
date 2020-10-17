@@ -255,8 +255,6 @@ class World {
 		cursor_y = Program.Clamp(cursor_y+y, 0, size-1);
 		// draw cursor
 		Program.console.SetGlyph(cursor_x, cursor_y, 'X', Color.Magenta);
-		// tooltip
-		RedrawTooltip();
 	}
 	public void Zoom(int z){
 		if (0 < z){
@@ -287,7 +285,7 @@ class World {
 		// display tooltip for thing
 		RedrawTooltip();
 	}
-	void RedrawTooltip(){
+	public void RedrawTooltip(){
 		WorldTile selection = tiles[cursor_y, cursor_x];
 		ClearTooltip();
 		selection.Tooltip();
