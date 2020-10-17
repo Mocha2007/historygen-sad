@@ -22,6 +22,9 @@ class Program {
 	public static Console console;
 	public static World world;
 	static void Main(string[] args){
+		// clear log
+		File.WriteAllText("log.txt", "");
+		// sadconsole stuff
 		Game.Create(World.size*2+tooltip_width, World.size);
 		Game.Instance.Window.Title = "Mocha's History Generator";
 		Game.OnInitialize = InitializeConsole;
@@ -83,7 +86,7 @@ class Program {
 				console.Print(0, 0, "[info] ", Color.Cyan, Color.Black);
 				break;
 		}
-		console.Print(0, 7, message.ToString(), Color.Silver, Color.Black);
+		console.Print(7, 0, message.ToString(), Color.Silver, Color.Black);
 		File.AppendAllText("log.txt", String.Format("{0} - {1}: {2}\r\n", DateTime.Now, level, message));
 	}
 	public static void Log(object message){
@@ -128,7 +131,7 @@ class Program {
 		return Math.Min(max, Math.Max(min, x));
 	}
 	public static int Clamp(int x, int min, int max){
-		return (int)Clamp((double)x, min, max);
+		return Math.Min(max, Math.Max(min, x));
 	}
 	// theta is lat; phi is lon
 	public static Tuple<double, double, double> LatLong2Spherical(double latitude, double longitude){

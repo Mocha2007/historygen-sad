@@ -15,6 +15,7 @@ namespace Mappings {
 		static readonly Tuple<string, Func<WorldTile, Color>>[] color_modes = new Tuple<string, Func<WorldTile, Color>>[]{
 			new Tuple<string, Func<WorldTile, Color>>("Default", ColorDefault),
 			new Tuple<string, Func<WorldTile, Color>>("Altitude", ColorAltitude),
+			new Tuple<string, Func<WorldTile, Color>>("Biome", ColorHoldridge),
 			new Tuple<string, Func<WorldTile, Color>>("Climate", ColorKoppen),
 			new Tuple<string, Func<WorldTile, Color>>("Potential ET Ratio", ColorPETRatio),
 			new Tuple<string, Func<WorldTile, Color>>("Precipitation", ColorPrecipitation),
@@ -275,6 +276,30 @@ namespace Mappings {
 		};
 		static Color ColorKoppen(WorldTile w){
 			return w.isLand ? koppen[w.climate] : Color.White;
+		}
+		static Color ColorHoldridge(WorldTile w){
+			if (!w.isLand)
+				return Color.Black;
+			Tuple<int, int> h = w.holdridgeCoords;
+			int a = h.Item1; int b = h.Item2;
+			if (a + b < -4)
+				return Color.White;
+			// conform to triangle at sides
+			a = Program.Clamp(a, -3, 4);
+			b = Program.Clamp(b, -4, 3);
+			// conform to triangle at bottom
+			int c = a + b;
+			if (0 < c){
+				a -= c/2;
+				b -= c/2 + (c % 2 == 0 ? 0 : 1);
+				c = 0;
+			}
+			// get index
+			int red = 32*a + 127;
+			int green = 32*c + 255;
+			int blue = a == -2 ? 144 : a == -3 ? 192 : 128;
+			// Program.Log(String.Format("{0}+{1}={2} -> ({3}, {4}, {5})", a, b, c, red, green, blue));
+			return new Color(red, green, blue);
 		}
 		static Color ColorPrecipitation(WorldTile w){
 			if (!w.isLand)
