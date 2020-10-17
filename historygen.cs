@@ -88,13 +88,13 @@ class Program {
 		File.AppendAllText("log.txt", String.Format("{0} {1} ms - {2}: {3}\r\n", DateTime.Now, DateTime.Now.Millisecond, level, message));
 		// clear log
 		console.Fill(new Rectangle(0, window_height - log_history.Length, window_width, log_history.Length), Color.Silver, Color.Black, 0, 0);
-		for (int i = log_history.Length-2; -1 <= i; i--){
+		for (int i = log_history.Length-1; 0 <= i; i--){
 			// select next log message
-			Tuple<string, byte> t = i == -1 ? new Tuple<string, byte>(message.ToString(), level) : log_history[i];
+			Tuple<string, byte> t = i == 0 ? new Tuple<string, byte>(message.ToString(), level) : log_history[i-1];
 			if (t != null)
 				LogMessage(t.Item1, t.Item2, i);
 			// move logs up / add message to log history
-			log_history[i+1] = t;
+			log_history[i] = t;
 		}
 	}
 	static void LogMessage(string message, byte level, int i){
