@@ -3,7 +3,8 @@ using System.Collections.Generic; // lists
 using System.IO; // file reading
 using System.Linq; // enumerable operations
 // using System.Runtime.InteropServices; // DllImport
-using System.Threading;
+using System.Threading; // Thread
+using System.Threading.Tasks; // Parallel.ForEach
 // other cs files
 using Resources;
 using Mappings;
@@ -199,9 +200,18 @@ class World {
 		while (!acceptable){
 			Program.Log("Generating new world from seed " + Program.seed);
 			// generate new world
-			for (byte y = 0; y < size; y++)
-				for (short x = 0; x < size*2; x++)
+			// long t_start = DateTime.Now.Ticks;
+			/*
+				for, for					=> 279 ms
+				Parallel.For, for			=> 100 ms
+				Parallel.For, Parallel.For	=> 77 ms
+			*/
+			Parallel.For(0, size, y => {
+				Parallel.For(0, size*2, x => {
 					w[y, x] = WorldTile.Random((double)x/size, (double)y/(size-1));
+			});});
+			// long t_end = DateTime.Now.Ticks;
+			// Program.Log(String.Format("took {0} ticks", t_end - t_start));
 			// check if valid
 			if (Valid(ref w))
 				break;
@@ -728,4 +738,7 @@ class WorldTile {
 - change map cursor to this:
 	https://sadconsole.com/articles/tutorials/get-started/part-4-movable-characters.html#add-a-movable-glyph
 - actually work on the history generator part of the history generator
+- maybe use
+	https://stackoverflow.com/a/4190969/2579798
+		for worldgen...?
 */
