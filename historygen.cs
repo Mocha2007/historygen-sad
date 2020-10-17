@@ -745,4 +745,5 @@ class WorldTile {
 - maybe use
 	https://stackoverflow.com/a/4190969/2579798
 		for worldgen...?
+- PAC tweaks in worldgen can create non-deterministic worlds. This should be fixed.
 */
