@@ -3,7 +3,7 @@ using System.Collections.Generic; // lists
 using System.IO; // file reading
 using System.Linq; // enumerable operations
 // using System.Runtime.InteropServices; // DllImport
-// using System.Threading.Tasks;
+using System.Threading;
 // other cs files
 using Resources;
 using Mappings;
@@ -214,6 +214,14 @@ class World {
 			}
 		}
 		Program.Log(failures + " failures");
+		// create a new thread to continue resource computation in background
+		new Thread(() => {
+			foreach (WorldTile t in w)
+				if (t.resource == null)
+					Program.Log("tile has no resource", 1);
+			Program.Log("resource generation complete");
+		}).Start();
+		// return while thread is running
 		return new World(w);
 	}
 	static bool Valid(ref WorldTile[,] w){
