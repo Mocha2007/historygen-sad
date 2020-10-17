@@ -25,7 +25,7 @@ class Program {
 		// clear log
 		File.WriteAllText("log.txt", "");
 		// sadconsole stuff
-		Game.Create(World.size*2+tooltip_width, World.size);
+		Game.Create("fonts/moki_square.font", World.size*2+tooltip_width, World.size);
 		Game.Instance.Window.Title = "Mocha's History Generator";
 		Game.OnInitialize = InitializeConsole;
 		Global.KeyboardState.InitialRepeatDelay /= 2;
@@ -162,7 +162,7 @@ class Program {
 	}
 }
 class World {
-	public static readonly byte size = 48;
+	public static readonly byte size = 64;
 	static readonly float seaFraction_tolerance = 0.05F;
 	static readonly short min_highest_peak_altitude = 5000;
 	readonly WorldTile[,] tiles;
