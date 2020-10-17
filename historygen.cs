@@ -218,7 +218,7 @@ class World {
 		new Thread(() => {
 			foreach (WorldTile t in w)
 				if (t.resource == null)
-					Program.Log("tile has no resource", 1);
+					Program.Log("tile has no resource (if this message appears, mocha broke the code!)", 1);
 			Program.Log("resource generation complete");
 		}).Start();
 		// return while thread is running
