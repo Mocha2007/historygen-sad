@@ -2,8 +2,6 @@
 using System.Collections.Generic; // lists
 using System.IO; // file reading
 using System.Linq; // enumerable operations
-// using System.Runtime.InteropServices; // DllImport
-using System.Threading; // Thread
 using System.Threading.Tasks; // Parallel.ForEach
 // other cs files
 using Resources;
@@ -230,7 +228,7 @@ class World {
 		}
 		Program.Log(failures + " failures");
 		// create a new thread to continue resource computation in background
-		new Thread(() => {
+		new Task(() => {
 			foreach (WorldTile t in w)
 				if (t.resource == null)
 					Program.Log("tile has no resource (if this message appears, mocha broke the code!)", 1);
@@ -722,13 +720,13 @@ class WorldTile {
 		Print(String.Format("Scale: {0}; {1}x{1}", ScaleString(), 32/minimap_scale));
 		Print(String.Format("Chars: {0}", Mapping.char_mode_name));
 		Print(String.Format("Color: {0}", Mapping.color_mode_name));
+		// show seed
+		Program.console.Print(left, World.size-1, Program.seed.ToString(), Color.White);
 		// actual map part
 		WorldTile[,] w = Minimap(size, size);
 		for (int i = 0; i < size; i++)
 			for (int j = 0; j < size; j++)
 				w[i, j].Print(Mapping.color_mode, Mapping.char_mode, left + j, top + i);
-		// show seed
-		Program.console.Print(left, World.size-1, Program.seed.ToString(), Color.White);
 	}
 	string ScaleString(){
 		double true_scale = circumference / World.size / minimap_scale; // unadjusted

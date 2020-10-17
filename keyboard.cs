@@ -1,3 +1,4 @@
+using System.Threading.Tasks; // Thread
 using SadConsole.Components;
 // using SadConsole.Input;
 using Microsoft.Xna.Framework.Input;
@@ -24,7 +25,7 @@ class Mokey : KeyboardConsoleComponent
 				|| info.IsKeyReleased(Keys.Up)
 				|| info.IsKeyReleased(Keys.Down)
 				)
-				Program.world.RedrawTooltip();
+				new Task(() => {Program.world.RedrawTooltip();}).Start();
 			// ditto for zoom keys
 			if (info.IsKeyPressed(Keys.OemPlus))
 				Program.world.Zoom(1);
