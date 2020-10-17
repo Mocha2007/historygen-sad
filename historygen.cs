@@ -306,7 +306,7 @@ class WorldTile {
 	// elevation - m; rainfall - mm; temperature - degrees celsius * 100
 	public readonly short elevation;
 	readonly double x, y;
-	
+	Resource resource_cache;
 	readonly short[] rainfall;
 	public readonly short[] temperature;
 	public static readonly float desiredSeaFraction = 0.4F; // 0.4 is about perfect; must be in (0, 0.92]
@@ -353,19 +353,26 @@ class WorldTile {
 	}
 	public Resource resource {
 		get {
+			if (resource_cache != null)
+				return resource_cache;
 			// generate resource
 			List<Resource> rs = new List<Resource>(potential_resources);
-			if (rs.Count == 0)
+			if (rs.Count == 0){
+				resource_cache = Resource.iron;
 				return Resource.iron;
+			}
 			ResourceRNG.Reset();
 			rs.SimplexShuffle(x, y);
 			while (0 < rs.Count){
 				double s = rs.Select(res => res.worldgen_weight).Sum();
 				Resource r = rs[0];
 				rs.RemoveAt(0);
-				if (Simplex.Noise(x, y, r.id, 0) < r.worldgen_weight)
+				if (Simplex.Noise(x, y, r.id, 0) < r.worldgen_weight){
+					resource_cache = r;
 					return r;
+				}
 			}
+			resource_cache = Resource.iron;
 			return Resource.iron;
 		}
 	}
@@ -691,4 +698,5 @@ class WorldTile {
 }
 /* todo list
 - fix all references of instance world in static world functions
+- fix remaining colors in mapping.cs
 */
