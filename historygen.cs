@@ -21,11 +21,14 @@ class Program {
 	public static readonly byte tooltip_width = 32;
 	public static Console console;
 	public static World world;
+	static readonly Tuple<string, byte>[] log_history = new Tuple<string, byte>[8];
+	static readonly int window_height = World.size + log_history.Length;
+	static readonly int window_width = World.size*2 + tooltip_width;
 	static void Main(string[] args){
 		// clear log
 		File.WriteAllText("log.txt", "");
 		// sadconsole stuff
-		Game.Create("fonts/moki_square.font", World.size*2+tooltip_width, World.size);
+		Game.Create("fonts/moki_square.font", window_width, window_height);
 		Game.Instance.Window.Title = "Mocha's History Generator";
 		Game.OnInitialize = InitializeConsole;
 		Global.KeyboardState.InitialRepeatDelay /= 2;
@@ -55,7 +58,7 @@ class Program {
 		Game.Instance.Dispose();
 	}
 	static void InitializeConsole(){
-		console = new Console(World.size*2+tooltip_width, World.size);
+		console = new Console(window_width, window_height);
 		console.IsFocused = true;
 		console.Components.Add(new Mokey());
 		Global.CurrentScreen = console;
@@ -75,19 +78,33 @@ class Program {
 		NewSeed(true);
 	}
 	public static void Log(object message, byte level){
+		// log in file
+		File.AppendAllText("log.txt", String.Format("{0} - {1}: {2}\r\n", DateTime.Now, level, message));
+		// clear log
+		console.Fill(new Rectangle(0, window_height - log_history.Length, window_width, log_history.Length), Color.Silver, Color.Black, 0, 0);
+		for (int i = log_history.Length-1; 0 <= i; i--){
+			// rewrite log messages
+			Tuple<string, byte> t = i == 0 ? new Tuple<string, byte>(message.ToString(), level) : log_history[i];
+			if (t != null)
+				LogMessage(t.Item1, t.Item2, i);
+			// move logs up / add message to log history
+			log_history[i] = 0 < i ? log_history[i-1] : t;
+		}
+	}
+	static void LogMessage(string message, byte level, int i){
+		int y = window_height - i - 1; // messages push up
 		switch (level){
 			case 1:
-				console.Print(0, 0, "[warn] ", Color.Yellow, Color.Black);
+				console.Print(0, y, "[warn] ", Color.Yellow, Color.Black);
 				break;
 			case 2:
-				console.Print(0, 0, "[err] ", Color.Red, Color.Black);
+				console.Print(0, y, "[err] ", Color.Red, Color.Black);
 				break;
 			default:
-				console.Print(0, 0, "[info] ", Color.Cyan, Color.Black);
+				console.Print(0, y, "[info] ", Color.Cyan, Color.Black);
 				break;
 		}
-		console.Print(7, 0, message.ToString(), Color.Silver, Color.Black);
-		File.AppendAllText("log.txt", String.Format("{0} - {1}: {2}\r\n", DateTime.Now, level, message));
+		console.Print(7, y, message, Color.Silver, Color.Black);
 	}
 	public static void Log(object message){
 		Log(message, 0);
@@ -180,6 +197,7 @@ class World {
 		bool acceptable = false;
 		int failures = 0;
 		while (!acceptable){
+			Program.Log("Generating new world from seed " + Program.seed);
 			// generate new world
 			for (byte y = 0; y < size; y++)
 				for (short x = 0; x < size*2; x++)
@@ -241,8 +259,8 @@ class World {
 				break;
 		}
 		if (resource_count.Keys.Count < Resource.resources.Count){
-			Program.Log(String.Format("missing {0} resources: {1}",
-				Resource.resources.Count-resource_count.Keys.Count,
+			int missing = Resource.resources.Count-resource_count.Keys.Count;
+			Program.Log(String.Format("missing {0} resource{1}: {2}", missing, missing == 1 ? "" : "s",
 				String.Join(", ", Resource.resources.Where(r => !resource_count.Keys.Contains(r)).Select(r => r.name))
 			));
 			return false;
@@ -280,7 +298,7 @@ class World {
 	}
 	public void Print(){
 		// big map
-		Program.console.Clear();
+		Program.console.Fill(new Rectangle(0, 0, size*2, size), Color.Silver, Color.Black, 0, 0);
 		for (byte y = 0; y < size; y++)
 			for (short x = 0; x < size*2; x++)
 				tiles[y, x].Print(Mapping.color_mode, Mapping.char_mode, x, y);
@@ -699,5 +717,7 @@ class WorldTile {
 	}
 }
 /* todo list
+- change map cursor to this:
+	https://sadconsole.com/articles/tutorials/get-started/part-4-movable-characters.html#add-a-movable-glyph
 - actually work on the history generator part of the history generator
 */

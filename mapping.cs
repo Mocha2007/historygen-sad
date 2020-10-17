@@ -54,12 +54,14 @@ namespace Mappings {
 		}
 		public static void CycleChar(int n){
 			selected_char_mode = Program.Mod(selected_char_mode+n, char_modes.Length);
+			Program.Log("Mapmode char changed to " + char_mode_name);
 		}
 		public static void CycleChar(){
 			CycleChar(1);
 		}
 		public static void CycleColor(int n){
 			selected_color_mode = Program.Mod(selected_color_mode+n, color_modes.Length);
+			Program.Log("Mapmode color changed to " + color_mode_name);
 		}
 		public static void CycleColor(){
 			CycleColor(1);
