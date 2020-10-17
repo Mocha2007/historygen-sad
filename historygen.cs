@@ -57,6 +57,7 @@ class Program {
 		console = new Console(window_width, window_height);
 		console.IsFocused = true;
 		console.Components.Add(new Mokey());
+		Log("Awakening the dusklings...");
 		Global.CurrentScreen = console;
 		new Task(() => { // do async so the window immediately shows up
 			// compute altitude cutoff
@@ -68,7 +69,7 @@ class Program {
 			long t_start = DateTime.Now.Ticks;
 			world = World.Random();
 			long t_end = DateTime.Now.Ticks;
-			Program.Log(String.Format("worldgen took {0} ms", (t_end - t_start)/1e4));
+			Log(String.Format("worldgen took {0} ms", (t_end - t_start)/10000));
 			world.Print();
 		}).Start();
 	}

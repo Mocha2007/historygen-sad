@@ -167,9 +167,9 @@ namespace Mappings {
 			// uses df-inspired legend
 			if (w.isLand){
 				// get color
-				if (5000 < w.elevation)
+				if (4000 <= w.elevation && w.elevation < 5000)
 					return Color.Gray;
-				if (3000 < w.elevation)
+				if (WorldTile.mountain_altitude < w.elevation)
 					return Color.Silver;
 				if (w.climate[0] == 'A')
 					return Color.Green;
