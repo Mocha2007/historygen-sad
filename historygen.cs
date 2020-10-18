@@ -498,16 +498,15 @@ class WorldTile {
 	}
 	public WorldTile downstream {
 		get {
-			Tuple<int, int> i = tile_index;
 			switch ((int)slope.Item2){
 				case 24: // N
-					return Program.world.GetTileAt(i.Item1, i.Item2-1);
+					return RelativeTile(0,-1);
 				case 25: // S
-					return Program.world.GetTileAt(i.Item1, i.Item2+1);
+					return RelativeTile(0, 1);
 				case 26: // E
-					return Program.world.GetTileAt(i.Item1+1, i.Item2);
+					return RelativeTile(1, 0);
 				default: // 27 W
-					return Program.world.GetTileAt(i.Item1-1, i.Item2);
+					return RelativeTile(-1, 0);
 			}
 		}
 	}
@@ -715,6 +714,10 @@ class WorldTile {
 	}
 	public void Print(Func<WorldTile, Color> Coloration, Func<WorldTile, int> CharSelector, int x, int y){
 		Program.console.SetGlyph(x, y, CharSelector(this), Coloration(this));
+	}
+	WorldTile RelativeTile(int rel_x, int rel_y){
+		Tuple<int, int> t = tile_index;
+		return Program.world.GetTileAt(t.Item1 + rel_x, t.Item2 + rel_y);
 	}
 	// SELECTION TOOLTIP
 	public void Tooltip(){
