@@ -9,6 +9,7 @@ class Mokey : KeyboardConsoleComponent
 	public override void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled)
 	{
 		handled = true;
+		bool shift = info.IsKeyDown(Keys.LeftShift) || info.IsKeyDown(Keys.RightShift);
 		if (Program.world != null){
 			// movement keys can use else ifs since they are contradictory
 			if (info.IsKeyPressed(Keys.Left))
@@ -33,11 +34,11 @@ class Mokey : KeyboardConsoleComponent
 				Program.world.Zoom(-1);
 			// other keys can be pressed simultaneously
 			if (info.IsKeyPressed(Keys.X)){
-				Mapping.CycleChar();
+				Mapping.CycleChar(shift ? -1 : 1);
 				Program.world.Print();
 			}
 			if (info.IsKeyPressed(Keys.Z)){
-				Mapping.CycleColor();
+				Mapping.CycleColor(shift ? -1 : 1);
 				Program.world.Print();
 			}
 		}
