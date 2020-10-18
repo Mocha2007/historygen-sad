@@ -20,7 +20,7 @@ class Program {
 	public static readonly byte tooltip_width = 32;
 	public static Console console;
 	public static World world;
-	static readonly Tuple<string, byte>[] log_history = new Tuple<string, byte>[8];
+	static readonly Tuple<string, byte>[] log_history = new Tuple<string, byte>[20];
 	static readonly int window_height = World.size + log_history.Length;
 	static readonly int window_width = World.size*2 + tooltip_width;
 	static void Main(string[] args){
@@ -729,7 +729,7 @@ class WorldTile {
 				w[i, j].Print(Mapping.color_mode, Mapping.char_mode, left + j, top + i);
 	}
 	string ScaleString(){
-		double true_scale = circumference / World.size / minimap_scale; // unadjusted
+		double true_scale = circumference / World.size / minimap_scale * 16; // unadjusted
 		true_scale *= Math.Cos(Program.Remap(y, 0, 1, Math.PI/2, -Math.PI/2)); // adjusts for latitude
 		return String.Format("{0} ({1})", 
 			1 <= true_scale ? Math.Round(true_scale) + "km" : Math.Round(true_scale*1000) + "m",
