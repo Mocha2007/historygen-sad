@@ -805,12 +805,17 @@ class WorldTile {
 	}
 }
 /* todo list
+- 5D simplex https://github.com/SquidPony/SquidLib/blob/master/squidlib-util/src/main/java/squidpony/squidmath/SeededNoise.java#L416-L570
+	- 5D perlin...? https://github.com/SquidPony/SquidLib/blob/master/squidlib-util/src/main/java/squidpony/squidmath/ClassicNoise.java#L174-L267
+	- apparently has more meaningful values in higher dimensions in contrast to simplex
+	- https://github.com/SquidPony/SquidLib/blob/master/squidlib-util/src/main/java/squidpony/squidmath/FoamNoise.java#L224-L289
+	- see comments in https://discord.com/channels/501465397518925843/509394241819115522/767232917213937685
 - change map cursor to this:
 	https://sadconsole.com/articles/tutorials/get-started/part-4-movable-characters.html#add-a-movable-glyph
-- actually work on the history generator part of the history generator
 - maybe use
 	https://stackoverflow.com/a/4190969/2579798
 		for worldgen...?
 - PAC tweaks in worldgen can create non-deterministic worlds. This should be fixed.
 - no lakes form from local minima, gotta add that
+- actually work on the history generator part of the history generator
 */

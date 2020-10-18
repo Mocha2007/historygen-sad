@@ -9,7 +9,7 @@ class Mokey : KeyboardConsoleComponent
 	public override void ProcessKeyboard(SadConsole.Console console, Keyboard info, out bool handled)
 	{
 		handled = true;
-		bool shift = info.IsKeyDown(Keys.LeftShift) || info.IsKeyDown(Keys.RightShift);
+		bool shift = info.IsKeyDown(Keys.LeftShift) || info.IsKeyDown(Keys.RightShift); // could move this to line 36 if (info.IsKeyPressed(Keys.X)){ if this is an issue
 		if (Program.world != null){
 			// movement keys can use else ifs since they are contradictory
 			if (info.IsKeyPressed(Keys.Left))
