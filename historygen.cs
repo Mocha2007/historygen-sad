@@ -592,7 +592,7 @@ class WorldTile {
 	}
 	public double river_outflow {
 		get {
-			double a = rainfall.Select((r, i) => r * (0 < temperature[i] ? 1 : 0)).Sum(); // account for frost
+			double a = rainfall.Select((r, i) => 0 < temperature[i] ? r : 0).Sum(); // account for frost
 			return isLand ? river_inflow + a - potential_evaporation : 0;
 		}
 	}
