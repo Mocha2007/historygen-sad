@@ -187,8 +187,29 @@ class World {
 	static readonly float seaFraction_tolerance = 0.1F;
 	static readonly short min_highest_peak_altitude = 5000;
 	readonly WorldTile[,] tiles;
+	/// <summary>
+	/// a sorted, flattened array of provinces sorted by elevation, from highest to lowest
+	/// </summary>
+	WorldTile[] elevation_cache;
 	World(WorldTile[,] tiles){
 		this.tiles = tiles;
+		new Task(() => {
+			// todo create elevation cache
+			// https://stackoverflow.com/a/641565/2579798
+			List<WorldTile> temp = tiles.Cast<WorldTile>().ToList();
+			temp.Sort((a, b) => a.elevation - b.elevation);
+			elevation_cache = temp.ToArray();
+			Program.Log("Created elevation cache");
+			// todo generate rivers
+			foreach (WorldTile t in elevation_cache){
+				double outflow = t.river_outflow;
+				if (outflow <= 0)
+					continue; // it all evaporates/freezes/whatever
+				// else, compute outflow direction and push downstream
+				t.downstream.river_inflow += (int)outflow;
+			}
+			Program.Log("Computed rivers");
+		}).Start();
 	}
 	static int tileCount {
 		get { return size * size * 2; }
@@ -236,6 +257,9 @@ class World {
 		}).Start();
 		// return while thread is running
 		return new World(w);
+	}
+	static void ClearTooltip(){
+		Program.console.Fill(new Rectangle(size*2, 0, Program.tooltip_width, size), Color.Silver, Color.Black, 0, 0);
 	}
 	static bool Valid(ref WorldTile[,] w){
 		// return true;
@@ -290,6 +314,17 @@ class World {
 		return true;
 	}
 	// non-static methods
+	public WorldTile GetTileAt(int x, int y){
+		if (y < 0){
+			y = 0;
+			x += size;
+		}
+		else if (size <= y){
+			y = size - 1;
+			x += size;
+		}
+		return tiles[y, Program.Mod(x, size*2)];
+	}
 	public void MoveCursor(int x, int y){
 		// replace old location
 		tiles[cursor_y, cursor_x].Print(Mapping.color_mode, Mapping.char_mode, cursor_x, cursor_y);
@@ -298,6 +333,22 @@ class World {
 		cursor_y = Program.Clamp(cursor_y+y, 0, size-1);
 		// draw cursor
 		Program.console.SetGlyph(cursor_x, cursor_y, 'X', Color.Magenta);
+	}
+	public void Print(){
+		// big map
+		Program.console.Fill(new Rectangle(0, 0, size*2, size), Color.Silver, Color.Black, 0, 0);
+		for (byte y = 0; y < size; y++)
+			for (short x = 0; x < size*2; x++)
+				tiles[y, x].Print(Mapping.color_mode, Mapping.char_mode, x, y);
+		// highlight selection
+		MoveCursor(0, 0);
+		// display tooltip for thing
+		RedrawTooltip();
+	}
+	public void RedrawTooltip(){
+		WorldTile selection = tiles[cursor_y, cursor_x];
+		ClearTooltip();
+		selection.Tooltip();
 	}
 	public void Zoom(int z){
 		if (0 < z){
@@ -317,25 +368,6 @@ class World {
 		// else pass
 		RedrawTooltip();
 	}
-	public void Print(){
-		// big map
-		Program.console.Fill(new Rectangle(0, 0, size*2, size), Color.Silver, Color.Black, 0, 0);
-		for (byte y = 0; y < size; y++)
-			for (short x = 0; x < size*2; x++)
-				tiles[y, x].Print(Mapping.color_mode, Mapping.char_mode, x, y);
-		// highlight selection
-		MoveCursor(0, 0);
-		// display tooltip for thing
-		RedrawTooltip();
-	}
-	public void RedrawTooltip(){
-		WorldTile selection = tiles[cursor_y, cursor_x];
-		ClearTooltip();
-		selection.Tooltip();
-	}
-	static void ClearTooltip(){
-		Program.console.Fill(new Rectangle(size*2, 0, Program.tooltip_width, size), Color.Silver, Color.Black, 0, 0);
-	}
 }
 
 class WorldTile {
@@ -348,6 +380,7 @@ class WorldTile {
 	public readonly short elevation;
 	readonly double x, y;
 	Resource resource_cache;
+	public int river_inflow; // how many mm anually get converted into streams and rivers
 	readonly short[] rainfall;
 	public readonly short[] temperature;
 	public static readonly float desiredSeaFraction = 0.45F; // 0.4 is about perfect; must be in (0, 0.92]
@@ -463,6 +496,21 @@ class WorldTile {
 			return letter_1 + letter_2 + letter_3;
 		}
 	}
+	public WorldTile downstream {
+		get {
+			Tuple<int, int> i = tile_index;
+			switch ((int)slope.Item2){
+				case 24: // N
+					return Program.world.GetTileAt(i.Item1, i.Item2-1);
+				case 25: // S
+					return Program.world.GetTileAt(i.Item1, i.Item2+1);
+				case 26: // E
+					return Program.world.GetTileAt(i.Item1+1, i.Item2);
+				default: // 27 W
+					return Program.world.GetTileAt(i.Item1-1, i.Item2);
+			}
+		}
+	}
 	public string holdridge {
 		get {
 			Tuple<int, int> hc = holdridgeCoords;
@@ -513,19 +561,6 @@ class WorldTile {
 	public bool isLand {
 		get { return 0 < this.elevation; }
 	}
-	public string oceanicZone {
-		get {
-			if (-200 < elevation)
-				return "Epipelagic";
-			if (-1000 < elevation)
-				return "Mesopelagic";
-			if (-4000 < elevation)
-				return "Bathypelagic";
-			if (-6000 < elevation)
-				return "Abyssopelagic";
-			return "Hadopelagic";
-		}
-	}
 	double potential_evaporation { // mm/yr
 		get {
 			if (temperature.Max() <= 0)
@@ -543,20 +578,46 @@ class WorldTile {
 	public IEnumerable<Resource> potential_resources {
 		get { return Resource.resources.Where(r => r.TileTest(this)); }
 	}
-	Tuple<double, char> slope {
+	public string oceanicZone {
+		get {
+			if (-200 < elevation)
+				return "Epipelagic";
+			if (-1000 < elevation)
+				return "Mesopelagic";
+			if (-4000 < elevation)
+				return "Bathypelagic";
+			if (-6000 < elevation)
+				return "Abyssopelagic";
+			return "Hadopelagic";
+		}
+	}
+	public double river_outflow {
+		get {
+			double a = rainfall.Select((r, i) => r * (0 < temperature[i] ? 1 : 0)).Sum(); // account for frost
+			return isLand ? river_inflow + a - potential_evaporation : 0;
+		}
+	}
+	public Tuple<double, char> slope {
 		get {
 			// get fine-tuned elevation
-			short a = Random(x, y).elevation;
-			// hypothetical tiles 1 km away
-			short b1 = Random(x + 1/circumference, y).elevation; // E
-			short b2 = Random(x - 1/circumference, y).elevation; // W
-			short b3 = Random(x, y + 1/circumference).elevation; // S
-			short b4 = Random(x, y - 1/circumference).elevation; // N
+			short a = RandomAltitude(x, y);
+			// hypothetical tiles 200 km away, smaller than most tiles under 60 latitude or so
+			double away = 200;
+			// 2/circ because 2 worldsizes = 1 circumference
+			short b1 = RandomAltitude(x + away * 2/circumference, y); // E
+			short b2 = RandomAltitude(x - away * 2/circumference, y); // W
+			short b3 = RandomAltitude(x, y + away * 2/circumference); // S
+			short b4 = RandomAltitude(x, y - away * 2/circumference); // N
 			List<int> ds = new List<int>{a-b1, a-b2, a-b3, a-b4}.ToList();
 			int d = ds.Max();
 			// points downhill
 			char c = (char)new int[]{26, 27, 25, 24}[ds.IndexOf(d)]; // todo →←↓↑
-			return new Tuple<double, char>(d / 1000.0, c);
+			return new Tuple<double, char>(d / 1000.0 / away, c);
+		}
+	}
+	Tuple<int, int> tile_index {
+		get {
+			return new Tuple<int, int>((int)(x*World.size), (int)(y*World.size));
 		}
 	}
 	// static methods
@@ -606,18 +667,19 @@ class WorldTile {
 				tx*ty*temperature_scale_seasonal,
 				octaves));
 	}
-	public static WorldTile Random(double x, double y){
+	static short RandomAltitude(double x, double y){
 		// altitude
 		double unadjusted_altitude = RandomUnadjustedAltitude(x, y);
 		if (unadjusted_altitude < 0 || 1 < unadjusted_altitude)
 			Program.Log(unadjusted_altitude, 2);
 		// this SHOULD be Math.Pow(desiredSeaFraction, altitude_exponent) if Perlin were evenly distributed, but distribution is actually appx. normal mean = 0.5, std = 0.146
 		double seaCutoff = Program.precomputed_altitude_cutoff;
-		double adjusted_altitude = unadjusted_altitude < seaCutoff ?
+		return (short)(unadjusted_altitude < seaCutoff ?
 			(1-unadjusted_altitude/seaCutoff) * altitude_min :
-			(unadjusted_altitude-seaCutoff)/(1-seaCutoff)*altitude_max;
-		// return
-		return new WorldTile(x, y, (short)adjusted_altitude, RandomRainfall(x, y));
+			(unadjusted_altitude-seaCutoff)/(1-seaCutoff)*altitude_max);
+	}
+	public static WorldTile Random(double x, double y){
+		return new WorldTile(x, y, RandomAltitude(x, y), RandomRainfall(x, y));
 	}
 	// non-static methods
 	double DayLength(double yearFraction){ // yearFraction in [0, 1); day length in days ie [0, 1]
@@ -679,13 +741,14 @@ class WorldTile {
 		Print(String.Format("Elevation: {0} m", elevation));
 		// slope
 		Tuple<double, char> s = slope;
-		Print(String.Format("Slope: {1} {0}%", s.Item1*100, s.Item2));
+		Print(String.Format("Slope: {1} {0}%", Math.Round(s.Item1*100, 1), s.Item2));
 		// temperature
 		Print(String.Format("Temperature: avg. {0:.##}{1}C", average_temperature/100.0, deg));
 		Print(String.Format("  in [{0:.##}{2}C, {1:.##}{2}C]", temperature.Min()/100.0, temperature.Max()/100.0, deg));
 		// rainfall
 		Print(String.Format("Rainfall: tot. {0} mm", annual_rainfall));
 		Print(String.Format("  in [{0} mm, {1} mm]", rainfall.Min(), rainfall.Max()));
+		Print(String.Format("River Inflow: tot. {0} mm", river_inflow));
 		double pe = Math.Round(potential_evaporation);
 		Print(String.Format("PE: {0} mm ({1:.###})", pe, pe/annual_rainfall));
 		// Resource(s)
@@ -716,7 +779,8 @@ class WorldTile {
 		};
 		// show minimap info
 		octaves = 10;
-		Print(String.Format("Minimap ({0}, {1})", (int)(x*World.size), (int)(y*World.size)));
+		Tuple<int, int> t = tile_index;
+		Print(String.Format("Minimap ({0}, {1})", t.Item1, t.Item2));
 		Print(String.Format("Scale: {0}; {1}x{1}", ScaleString(), 32/minimap_scale));
 		Print(String.Format("Chars: {0}", Mapping.char_mode_name));
 		Print(String.Format("Color: {0}", Mapping.color_mode_name));
@@ -745,4 +809,5 @@ class WorldTile {
 	https://stackoverflow.com/a/4190969/2579798
 		for worldgen...?
 - PAC tweaks in worldgen can create non-deterministic worlds. This should be fixed.
+- no lakes form from local minima, gotta add that
 */

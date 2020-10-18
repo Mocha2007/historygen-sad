@@ -10,6 +10,7 @@ namespace Mappings {
 		static readonly Tuple<string, Func<WorldTile, int>>[] char_modes = new Tuple<string, Func<WorldTile, int>>[]{
 			new Tuple<string, Func<WorldTile, int>>("Altitude", CharAltitude),
 			new Tuple<string, Func<WorldTile, int>>("Block", CharBlock),
+			new Tuple<string, Func<WorldTile, int>>("River", CharRiver),
 			new Tuple<string, Func<WorldTile, int>>("Dwarf Fortress", CharDF),
 		};
 		static readonly Tuple<string, Func<WorldTile, Color>>[] color_modes = new Tuple<string, Func<WorldTile, Color>>[]{
@@ -20,6 +21,7 @@ namespace Mappings {
 			// new Tuple<string, Func<WorldTile, Color>>("Potential ET Ratio", ColorPETRatio),
 			new Tuple<string, Func<WorldTile, Color>>("Precipitation", ColorPrecipitation),
 			new Tuple<string, Func<WorldTile, Color>>("Resource", ColorResource),
+			new Tuple<string, Func<WorldTile, Color>>("River Inflow", ColorRiver),
 			new Tuple<string, Func<WorldTile, Color>>("Temperature", ColorTemperature),
 			new Tuple<string, Func<WorldTile, Color>>("Temperature Variation", ColorTemperatureVariation),
 			new Tuple<string, Func<WorldTile, Color>>("Dwarf Fortress", ColorDF),
@@ -154,6 +156,9 @@ namespace Mappings {
 			}
 			// deserts
 			return w.elevation < 1000 ? '~' : 247;
+		}
+		static int CharRiver(WorldTile w){
+			return w.isLand ? w.slope.Item2 : (char)247;
 		}
 		// coloration
 		// todo: pure df legend; works exactly like DF
@@ -316,6 +321,9 @@ namespace Mappings {
 		}*/
 		static Color ColorResource(WorldTile w){
 			return !w.isLand ? Color.Black : w.resource == null ? Color.White : w.resource.color;
+		}
+		static Color ColorRiver(WorldTile w){
+			return !w.isLand ? Color.Black : Heat((double)w.river_inflow/WorldTile.rainfall_max);
 		}
 		static Color ColorTemperature(WorldTile w){
 			if (!w.isLand)
