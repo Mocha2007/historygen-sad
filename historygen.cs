@@ -425,31 +425,6 @@ class WorldTile {
 	public double average_temperature {
 		get { return temperature.Select(x => (double)x).Sum()/12; }
 	}
-	public Resource resource {
-		get {
-			if (resource_cache != null)
-				return resource_cache;
-			// generate resource
-			List<Resource> rs = new List<Resource>(potential_resources);
-			if (rs.Count == 0){
-				resource_cache = Resource.iron;
-				return Resource.iron;
-			}
-			ResourceRNG.Reset();
-			rs.SimplexShuffle(x, y);
-			while (0 < rs.Count){
-				double s = rs.Select(res => res.worldgen_weight).Sum();
-				Resource r = rs[0];
-				rs.RemoveAt(0);
-				if (Simplex.Noise(x, y, r.id, 0) < r.worldgen_weight){
-					resource_cache = r;
-					return r;
-				}
-			}
-			resource_cache = Resource.iron;
-			return Resource.iron;
-		}
-	}
 	int biotemperature {
 		get {
 			double t_mean = temperature.Select(t => Program.Clamp(t/100.0, 0, 30)).Sum()/12;
@@ -588,6 +563,31 @@ class WorldTile {
 			if (-6000 < elevation)
 				return "Abyssopelagic";
 			return "Hadopelagic";
+		}
+	}
+	public Resource resource {
+		get {
+			if (resource_cache != null)
+				return resource_cache;
+			// generate resource
+			List<Resource> rs = new List<Resource>(potential_resources);
+			if (rs.Count == 0){
+				resource_cache = Resource.iron;
+				return Resource.iron;
+			}
+			ResourceRNG.Reset();
+			rs.SimplexShuffle(x, y);
+			while (0 < rs.Count){
+				double s = rs.Select(res => res.worldgen_weight).Sum();
+				Resource r = rs[0];
+				rs.RemoveAt(0);
+				if (Simplex.Noise(x, y, r.id, 0) < r.worldgen_weight/s){
+					resource_cache = r;
+					return r;
+				}
+			}
+			resource_cache = Resource.iron;
+			return Resource.iron;
 		}
 	}
 	public double river_outflow {

@@ -69,7 +69,7 @@ namespace Resources {
 				Tuple<int, int> h = w.holdridgeCoords;
 				return h.Item1 == -1 && -2 < h.Item1+h.Item2;
 			} // based on modern cultivation range
-			, 6, new Color(210, 105, 30)); // guess
+			, 7, new Color(210, 105, 30)); // guess
 		static readonly Resource coal = new Resource("coal",
 			w => w.HasDeposit(4, 0.5) // was this a wet forest 300 million years ago?
 			, 7, new Color(32, 32, 32)); // 179 prov in vicky 2
@@ -78,10 +78,10 @@ namespace Resources {
 				Tuple<int, int> h = w.holdridgeCoords;
 				return h.Item1 < 0 && -1 < h.Item1+h.Item2;
 			} // based on native range
-			, 6, new Color(114, 53, 22)); // guess
+			, 7, new Color(114, 53, 22)); // guess
 		static readonly Resource coffee = new Resource("coffee",
 			w => w.holdridge == "dry forest" // based on native range
-			, 6, new Color(56, 38, 22)); // 63 prov in vicky 2
+			, 7, new Color(56, 38, 22)); // 63 prov in vicky 2
 		static readonly Resource copper = new Resource("copper",
 			w => w.HasDeposit(3, 0.5)
 			, 7, new Color(216, 117, 38)); // guess
@@ -106,7 +106,7 @@ namespace Resources {
 			, 3, new Color(244, 198, 198));
 		static readonly Resource gold = new Resource("gold",
 			w => w.HasDeposit(1, 0.5)
-			, 0, new Color(255, 214, 48)); // 3503 t/yr in 2018; 1 prov in vicky 2 = precious metal
+			, 2, new Color(255, 214, 48)); // 3503 t/yr in 2018; 1 prov in vicky 2 = precious metal
 		static readonly Resource hemp = new Resource("hemp",
 			w => {
 				if ( w.temperature.Min() < -500 || 3100 < w.temperature.Max() ) // lost source, but somewhere on wikipedia
@@ -123,7 +123,7 @@ namespace Resources {
 			, 6, new Color(226, 201, 119)); // guess
 		public static readonly Resource iron = new Resource("iron",
 			w => w.HasDeposit(2, 0.5)
-			, 7, new Color(51, 51, 51)); // 116 prov in vicky 2 = iron
+			, 7, new Color(51, 51, 51)); // 1.595 Gt/yr in 2006; 116 prov in vicky 2 = iron
 		static readonly Resource ivory = new Resource("ivory",
 			w => {
 				Tuple<int, int> hc = w.holdridgeCoords;
@@ -153,7 +153,7 @@ namespace Resources {
 				return 2000 < r && r < 3000
 					&& 2500 <= t_min && t_max <= 2800;
 			} // https://en.wikipedia.org/wiki/Natural_rubber#Cultivation
-			, 6, Color.DarkBlue); // guess
+			, 7, Color.DarkBlue); // guess
 		static readonly Resource salt = new Resource("salt",
 			w => { // desert OR near water
 				if (w.elevation < 200)
@@ -199,22 +199,22 @@ namespace Resources {
 				Tuple<int, int> h = w.holdridgeCoords;
 				return h.Item1 == -1 && (h.Item2 == -1 || h.Item2 == 0);
 			} // france...?
-			, 4, Color.DarkCyan); // guess
+			, 5, Color.DarkCyan); // guess
 		static readonly Resource tropical_wood = new Resource("tropical_wood",
 			w => w.holdridgeCoords.Item1 < 0 && w.climate[0] == 'A' // wet && tropical
-			, 4, new Color(114, 119, 22)); // guess
+			, 6, new Color(114, 119, 22)); // guess
 		static readonly Resource wine = new Resource("wine",
 			w => {
 				Tuple<int, int> hc = w.holdridgeCoords;
 				return (hc.Item2 == -2 || hc.Item2 == -1) && (hc.Item1+hc.Item2 == -2 || hc.Item1+hc.Item2 == -1);
 			} // appx natural range
-			, 5, new Color(91, 33, 71)); // guess
+			, 6, new Color(91, 33, 71)); // guess
 		static readonly Resource woad = new Resource("woad",
 			w => {
 				Tuple<int, int> hc = w.holdridgeCoords;
 				return hc.Item2 < 0 && hc.Item1+hc.Item2 == -2;
 			} // "Woad is native to the steppe and desert zones of the Caucasus, Central Asia to Eastern Siberia and Western Asia"
-			, 4, Color.Blue); // 20 prov in vicky 2 == dye
+			, 5, Color.Blue); // 20 prov in vicky 2 == dye
 		static readonly Resource wheat = new Resource("wheat",
 			w => {
 				Tuple<int, int> hc = w.holdridgeCoords;
