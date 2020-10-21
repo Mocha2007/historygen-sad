@@ -72,7 +72,7 @@ namespace Resources {
 			, 7, new Color(210, 105, 30)); // guess
 		static readonly Resource coal = new Resource("coal",
 			w => w.HasDeposit(4, 0.5) // was this a wet forest 300 million years ago?
-			, 7, new Color(32, 32, 32)); // 179 prov in vicky 2
+			, 6, new Color(32, 32, 32)); // 179 prov in vicky 2
 		static readonly Resource cocoa = new Resource("cocoa",
 			w => {
 				Tuple<int, int> h = w.holdridgeCoords;
@@ -84,13 +84,13 @@ namespace Resources {
 			, 7, new Color(56, 38, 22)); // 63 prov in vicky 2
 		static readonly Resource copper = new Resource("copper",
 			w => w.HasDeposit(3, 0.5)
-			, 7, new Color(216, 117, 38)); // guess
+			, 6, new Color(216, 117, 38)); // guess
 		static readonly Resource cotton = new Resource("cotton",
 			w => {
 				Tuple<int, int> hc = w.holdridgeCoords;
 				return hc.Item2 < 1 && -2 < hc.Item1+hc.Item2;
 			} // "The plant is a shrub native to tropical and subtropical regions around the world"
-			, 7, new Color(132, 173, 153)); // 25 Mt/yr in 2011; 106 prov in vicky 2
+			, 6, new Color(132, 173, 153)); // 25 Mt/yr in 2011; 106 prov in vicky 2
 		static readonly Resource fish = new Resource("fish",
 			w => w.elevation < 200 // 150 is slightly too low
 			, 8, new Color(140, 209, 247)); // 235 prov in vicky 2
@@ -106,7 +106,7 @@ namespace Resources {
 			, 3, new Color(244, 198, 198));
 		static readonly Resource gold = new Resource("gold",
 			w => w.HasDeposit(1, 0.5)
-			, 2, new Color(255, 214, 48)); // 3503 t/yr in 2018; 1 prov in vicky 2 = precious metal
+			, 3, new Color(255, 214, 48)); // 3503 t/yr in 2018; 1 prov in vicky 2 = precious metal
 		static readonly Resource hemp = new Resource("hemp",
 			w => {
 				if ( w.temperature.Min() < -500 || 3100 < w.temperature.Max() ) // lost source, but somewhere on wikipedia
@@ -123,7 +123,7 @@ namespace Resources {
 			, 6, new Color(226, 201, 119)); // guess
 		public static readonly Resource iron = new Resource("iron",
 			w => w.HasDeposit(2, 0.5)
-			, 7, new Color(51, 51, 51)); // 1.595 Gt/yr in 2006; 116 prov in vicky 2 = iron
+			, 6, new Color(51, 51, 51)); // 1.595 Gt/yr in 2006; 116 prov in vicky 2 = iron
 		static readonly Resource ivory = new Resource("ivory",
 			w => {
 				Tuple<int, int> hc = w.holdridgeCoords;
@@ -245,7 +245,7 @@ Black		FORBIDDEN
 210	105	30	cinnamon
 216	117	38	copper
 226	201	119	incense
-244	198	198	gems
+244	198	198	gem
 244	237	147	wheat
 254	254	254	salt
 255	214	48	gold
@@ -262,12 +262,12 @@ White		marble
 
 ORE IDS
 0	FORBIDDEN
-1	gold
-2	iron
-3	copper
-4	coal
-5	sulfur
-6	silver
-7	gems
-8 	marble
+1	gold	3
+2	iron	6
+3	copper	6
+4	coal	6
+5	sulfur	5
+6	silver	3
+7	gem		3
+8 	marble	3
 */
