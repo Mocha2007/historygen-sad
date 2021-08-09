@@ -1,0 +1,8 @@
+part
+	name head heads
+	parent root (specifying this isn't strictly necessary, though)
+	tags_ (this is where you'd put tags like VISION)
+end
+part
+	name fur
+end

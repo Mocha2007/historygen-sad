@@ -19,21 +19,30 @@ namespace Bio {
 			lifeforms.Append(this);
 		}
 		public static void ParseData(){
-			string[] raw = File.ReadAllLines("data/bio.dat").Select(line =>
-				Regex.Replace(line.ToLower(), @"^\s+|\s+$", "") // set lowercase; remove leading/trailing whitespace
-			).ToArray();
+			IEnumerable<string> raw = File.ReadAllLines("data/bio_part.dat")
+				.Concat(File.ReadAllLines("data/bio_plan.dat"))
+				.Concat(File.ReadAllLines("data/bio.dat"))
+				.Select(line =>
+					Regex.Replace(line.ToLower(), @"^\s+|\s+$", "") // set lowercase; remove leading/trailing whitespace
+				);
 			string type = "";
 			AnimalName name = AnimalName.none;
 			int mass = 0;
 			int maturity_time = 0;
+			BodyPart parent = BodyPart.root;
+			BodyPart[] parts = new BodyPart[0];
 			BodyPlan body_plan = BodyPlan.none;
 			string[] tags = new string[0];
+			int partcount = 0;
+			int plans = 0;
 			int animals = 0;
 			int plants = 0;
 			foreach (string line in raw){
 				string[] split = line.Split(" ");
 				string kw = split[0];
 				switch (kw){
+					case "part":
+					case "plan":
 					case "animal":
 					case "plant":
 						type = kw;
@@ -41,17 +50,24 @@ namespace Bio {
 					case "name":
 						name = new AnimalName(split[1]); // todo
 						continue;
+					case "tags":
+						tags = split.Skip(1).ToArray();
+						continue;
+					case "parent":
+						parent = BodyPart.FromName(split[1]);
+						continue;
+					case "parts":
+						parts = split.Skip(1).Select(s => BodyPart.FromName(s)).ToArray();
+						continue;
 					case "mass":
 						mass = int.Parse(split[1]);
 						continue;
 					case "maturity_time":
 						maturity_time = int.Parse(split[1]);
 						continue;
+					case "template":
 					case "bodyplan":
 						body_plan = BodyPlan.FromName(split[1]);
-						continue;
-					case "tags":
-						tags = split.Skip(1).ToArray();
 						continue;
 					case "end":
 						break; // handled below
@@ -60,7 +76,15 @@ namespace Bio {
 						continue;
 				}
 				// handle end
-				if (type == "animal"){
+				if (type == "part"){
+					new BodyPart(name, parent, tags);
+					partcount++;
+				}
+				else if (type == "plan"){
+					new BodyPlan(name, body_plan, parts);
+					plans++;
+				}
+				else if (type == "animal"){
 					new Animal(name, mass, maturity_time, tags, body_plan);
 					animals++;
 				}
@@ -77,6 +101,8 @@ namespace Bio {
 				body_plan = BodyPlan.none;
 				tags = new string[0];
 			}
+			Program.Log(String.Format("{0} bodyparts loaded", partcount), 0);
+			Program.Log(String.Format("{0} bodyplans loaded", plans), 0);
 			Program.Log(String.Format("{0} plants loaded", plants), 0);
 			Program.Log(String.Format("{0} animals loaded", animals), 0);
 		}
@@ -171,53 +197,49 @@ namespace Bio {
 		
 	}
 	class BodyPart {
-		readonly string name;
+		public static readonly List<BodyPart> bodyParts = new List<BodyPart>();
+		readonly AnimalName name;
 		readonly BodyPart parent;
 		readonly string[] tags;
-		BodyPart(string n, BodyPart p, string[] t){
+		public BodyPart(AnimalName n, BodyPart p, string[] t){
 			name = n;
 			parent = p;
 			tags = t;
-		}
-		BodyPart(string n, BodyPart p){
-			name = n;
-			parent = p;
-			tags = new string[0];
+			bodyParts.Add(this);
 		}
 		BodyPart(string n){
-			name = n;
+			name = new AnimalName(n);
 			parent = root;
 			tags = new string[0];
+			bodyParts.Add(this);
 		}
-		static readonly BodyPart root = new BodyPart("root");
-		public static readonly BodyPart fur = new BodyPart("fur");
-		public static readonly BodyPart head = new BodyPart("head");
+		public static BodyPart FromName(string s){
+			return bodyParts.Find(bp => bp.name.generic == s);
+		}
+		public static readonly BodyPart root = new BodyPart("root");
 	}
 	class BodyPlan {
 		public static readonly List<BodyPlan> bodyPlans = new List<BodyPlan>();
-		string name;
+		AnimalName name;
 		BodyPart[] parts;
 		BodyPlan(string n, BodyPart[] p){
-			name = n;
+			name = new AnimalName(n);
 			parts = p;
 			bodyPlans.Append(this);
 		}
-		BodyPlan(string n, BodyPlan b, BodyPart[] p){
+		public BodyPlan(AnimalName n, BodyPlan b, BodyPart[] p){
 			name = n;
-			parts = b.parts.Concat(p).ToArray();
+			if (b == null)
+				parts = p;
+			else
+				parts = b.parts.Concat(p).ToArray();
 			bodyPlans.Append(this);
 		}
 		public static BodyPlan FromName(string s){
-			return bodyPlans.Find(bp => bp.name == s);
+			return bodyPlans.Find(bp => bp.name.generic == s);
 		}
 		// useful templates
 		public static readonly BodyPlan none = new BodyPlan("none", new BodyPart[0]);
-		public static readonly BodyPlan quadruped = new BodyPlan("quadruped", new BodyPart[]{
-			BodyPart.head
-		});
-		public static readonly BodyPlan generic_mammal = new BodyPlan("generic_mammal", quadruped, new BodyPart[]{
-			BodyPart.fur
-		});
 	}
 	class Plant : Lifeform{
 		static readonly List<Plant> plants = new List<Plant>();

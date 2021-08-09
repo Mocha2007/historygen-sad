@@ -2,7 +2,7 @@ animal
 	name cat cats kitten kittens
 	mass 4000
 	maturity_time 365
-	bodyplan generic_mammal
+	bodyplan mammal
 	tags intelligent omnivore
 end
 plant

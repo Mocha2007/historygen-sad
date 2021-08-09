@@ -1,0 +1,9 @@
+plan
+	name quadruped (generic quadruped template)
+	parts head
+end
+plan
+	name mammal (generic mammal template)
+	parts fur
+	template quadruped
+end
