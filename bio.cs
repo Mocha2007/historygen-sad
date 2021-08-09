@@ -55,8 +55,9 @@ namespace Bio {
 						continue;
 					case "end":
 						break; // handled below
-					default:
-						throw new ArgumentOutOfRangeException("invalid datafile keyword");
+					default: // just a comment!
+						// throw new ArgumentOutOfRangeException("invalid datafile keyword");
+						continue;
 				}
 				// handle end
 				if (type == "animal"){
