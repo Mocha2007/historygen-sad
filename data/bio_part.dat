@@ -35,6 +35,11 @@ part
 	tags filtration bilateral
 end
 part
+	name spleen spleens
+	parent abdomen
+	tags filtration
+end
+part
 	name stomach stomachs
 	parent abdomen
 	tags digestion
