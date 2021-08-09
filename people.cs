@@ -51,6 +51,15 @@ namespace Person {
 		// https://en.wikipedia.org/wiki/HEXACO_model_of_personality_structure ???
 		// https://en.wikipedia.org/wiki/Facet_%28psychology%29 ???
 		static readonly PersonalityAxis extraversion = new PersonalityAxis("extraversion", "introversion");
+		static readonly PersonalityAxis agreeableness = new PersonalityAxis("agreeableness", "disagreeableness");
+		static readonly PersonalityAxis neuroticism = new PersonalityAxis("neuroticism", "stability");
+		static readonly PersonalityAxis conscientousness = new PersonalityAxis("conscientousness", "spontaneity"); // imperfect antonym but w/e
+		static readonly PersonalityAxis openness = new PersonalityAxis("openness", "closedness");
+		// extraversion
+		// agreeableness
+		// neuroticism
+		// conscientousness
+		// openness (to experiences)
 	}
 	class Relation {
 		// friends, family, etc...
