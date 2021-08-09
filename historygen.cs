@@ -184,6 +184,13 @@ class Program {
 	public static Tuple<double, double> Time2TimeXY(double t){
 		return new Tuple<double, double>(Math.Cos(t), Math.Sin(t));
 	}
+	public static Color ColorFromName(string s){
+		// https://stackoverflow.com/a/13768727/2579798
+		var prop = typeof(Color).GetProperty(s);
+		if (prop != null)
+			return (Color)prop.GetValue(null, null);
+		return default(Color);
+	}
 }
 class World {
 	public static readonly byte size = 64;

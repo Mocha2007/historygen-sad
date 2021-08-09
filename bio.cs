@@ -3,6 +3,8 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+// color
+using Microsoft.Xna.Framework;
 
 namespace Bio {
 	class Lifeform {
@@ -34,6 +36,8 @@ namespace Bio {
 			BodyPart[] parts = new BodyPart[0];
 			BodyPlan body_plan = BodyPlan.none;
 			string[] tags = new string[0];
+			char c = '\0';
+			Color color = Color.Gray;
 			Action Reset = () => {
 				name = AnimalName.none;
 				mass = 0;
@@ -42,6 +46,8 @@ namespace Bio {
 				parts = new BodyPart[0];
 				body_plan = BodyPlan.none;
 				tags = new string[0];
+				c = '\0';
+				color = Color.Gray;
 			};
 			int partcount = 0;
 			int plans = 0;
@@ -69,6 +75,10 @@ namespace Bio {
 					case "parts":
 						parts = split.Skip(1).Select(s => BodyPart.FromName(s)).ToArray();
 						continue;
+					case "icon":
+						color = new Color(uint.Parse(split[1], System.Globalization.NumberStyles.HexNumber));
+						c = split[2][0];
+						continue;
 					case "mass":
 						mass = int.Parse(split[1]);
 						continue;
@@ -94,7 +104,7 @@ namespace Bio {
 					plans++;
 				}
 				else if (type == "animal"){
-					new Animal(name, mass, maturity_time, tags, body_plan);
+					new Animal(name, mass, maturity_time, tags, body_plan, c, color);
 					animals++;
 				}
 				else if (type == "plant"){
@@ -115,8 +125,12 @@ namespace Bio {
 	class Animal : Lifeform {
 		static readonly List<Animal> animals = new List<Animal>();
 		readonly BodyPlan bodyplan;
-		public Animal(AnimalName n, int mas, int mat, string[] t, BodyPlan p) : base(n, mas, mat, t){
+		char c;
+		Color color;
+		public Animal(AnimalName n, int mas, int mat, string[] t, BodyPlan p, char c, Color col) : base(n, mas, mat, t){
 			bodyplan = p;
+			this.c = c;
+			color = col;
 			animals.Append(this);
 		}
 	}

@@ -1,5 +1,6 @@
 animal
 	name cat cats kitten kittens
+	icon 808080 c
 	mass 4000
 	maturity_time 365
 	bodyplan mammal
