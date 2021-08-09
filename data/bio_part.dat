@@ -21,8 +21,33 @@ part
 	tags breathing speech bilateral
 end
 part
+	name heart hearts
+	parent thorax
+	tags circulation
+end
+part
 	name abdomen abdomina
 	parent body
+end
+part
+	name kidney kidneys
+	parent abdomen
+	tags filtration bilateral
+end
+part
+	name stomach stomachs
+	parent abdomen
+	tags digestion
+end
+part
+	name liver livers
+	parent abdomen
+	tags digestion
+end
+part
+	name gut guts
+	parent abdomen
+	tags digestion
 end
 
 head...
@@ -52,6 +77,11 @@ part
 	name throat throats
 	parent neck
 	tags eating drinking breathing speech
+end
+part
+	name brain brains
+	parent head
+	tags thought
 end
 
 mouth...

@@ -1,6 +1,6 @@
 plan
 	name vertebrate (generic vertebrate template)
-	parts skin body thorax abdomen head eye nose neck throat mouth tongue
+	parts skin body thorax heart abdomen kidney stomach liver gut head eye nose neck throat brain mouth tongue
 	tags sexual
 end
 plan
@@ -27,5 +27,5 @@ plan
 	name hominoid (eg. humans, dwarves, orcs, elves, ...)
 	parts hand
 	template mammal
-	tags sapient
+	tags sapient omnivore
 end

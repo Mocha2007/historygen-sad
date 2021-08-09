@@ -6,6 +6,13 @@ animal
 	bodyplan mammal
 	tags intelligent omnivore
 end
+animal
+	name human humans man men woman women child children boy boys girl girls
+	icon 808000 H
+	mass 70000
+	maturity_time 7300 (20 years)
+	bodyplan hominoid
+end
 plant
 	name pine pines
 	mass 2500000
