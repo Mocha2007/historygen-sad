@@ -168,17 +168,20 @@ namespace Person {
 }
 
 namespace People {
-	class Country {
+	class Construct {
+		string name;
+	}
+	class Country : Construct {
 		readonly Culture primaryCulture;
 	}
-	class Culture {
+	class Culture : Construct {
 		readonly Language language;
 		readonly Religion religion;
 	}
-	class Language {
+	class Language : Construct {
 
 	}
-	class Religion {
+	class Religion : Construct {
 
 	}
 }
