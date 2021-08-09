@@ -66,6 +66,7 @@ part
 end
 
 limbs...
+upper limbs...
 part
 	name shoulder shoulders
 	parent thorax
@@ -86,3 +87,50 @@ part
 	parent aftarm
 	tags joint bilateral
 end
+part
+	name forearm forearms
+	parent elbow
+	tags bilateral
+end
+part
+	name wrist wrists
+	parent forearm
+	tags joint bilateral
+end
+part
+	name hand hands
+	parent wrist
+	tags grasping bilateral
+end
+lower limbs...
+part
+	name hip hips
+	parent abdomen
+	tags joint bilateral
+end
+part
+	name thigh thighs
+	parent hip
+	tags bilateral
+end
+part
+	name knee knees
+	parent thigh
+	tags joint bilateral
+end
+part
+	name shin shins
+	parent knee
+	tags bilateral
+end
+part
+	name ankle ankles
+	parent shin
+	tags joint bilateral
+end
+part
+	name foot feet
+	parent ankle
+	tags walking bilateral
+end
+// haven't added the below to plans yet - todo!

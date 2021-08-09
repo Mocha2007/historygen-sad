@@ -5,7 +5,7 @@ plan
 end
 plan
 	name tetrapod
-	parts lung ear shoulder
+	parts lung ear shoulder hip thigh knee shin ankle foot
 	template vertebrate
 end
 plan
@@ -15,7 +15,7 @@ plan
 end
 plan
 	name quadruped (generic quadruped template)
-	parts aftarm elbow
+	parts aftarm elbow forearm wrist
 	template tetrapod
 end
 plan
@@ -25,6 +25,7 @@ plan
 end
 plan
 	name hominoid (eg. humans, dwarves, orcs, elves, ...)
+	parts hand
 	template mammal
 	tags sapient
 end
