@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Resources;
@@ -139,6 +140,27 @@ namespace Person {
 		double SkillCheckSucceedChance(byte challengeRating) {
 			return 1 - 1/(level*level + 2 - challengeRating*challengeRating);
 		}
+		static readonly string[] levelnamescoarse = new string[]{
+			"professional",
+			"expert",
+			"master",
+			"legendary",
+		};
+		static readonly string[] levelnamesfine = new string[]{
+			"dabbling",
+			"beginner",
+			"novice",
+			"competent",
+			"skilled",
+		};
+		string skillLevelName {
+			get {
+				if (level < 5)
+					return levelnamesfine[level];
+				return String.Format("{0} +{1}", levelnamescoarse[level/5-1], levelnamescoarse[level%5]);
+			}
+		}
+		// static
 		public static PersonalSkill[] BlankSlate(){
 			return Skill.skills.Select(s => new PersonalSkill(s)).ToArray();
 		}
