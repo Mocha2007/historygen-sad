@@ -1,8 +1,39 @@
+systemic...
 part
-	name head heads
-	parent root (specifying this isn't strictly necessary, though)
-	tags_ (this is where you'd put tags like VISION)
+	name skin
 end
 part
 	name fur
+	parent skin
+end
+
+head...
+part
+	name head heads
+end
+part
+	name ear ears
+	parent head
+	tags hearing
+end
+part
+	name eye eyes
+	parent head
+	tags vision
+end
+part
+	name nose noses
+	parent head
+	tags smell
+end
+
+mouth...
+part
+	name mouth mouths
+	parent head
+end
+part
+	name tongue tongues
+	parent mouth
+	tags taste speech
 end

@@ -1,6 +1,6 @@
 plan
 	name quadruped (generic quadruped template)
-	parts head
+	parts skin head ear eye nose mouth tongue
 end
 plan
 	name mammal (generic mammal template)

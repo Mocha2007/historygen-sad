@@ -26,6 +26,7 @@ namespace Bio {
 					Regex.Replace(line.ToLower(), @"^\s+|\s+$", "") // set lowercase; remove leading/trailing whitespace
 				);
 			string type = "";
+			// MAKE SURE TO COPY THESE TO RESET
 			AnimalName name = AnimalName.none;
 			int mass = 0;
 			int maturity_time = 0;
@@ -33,6 +34,15 @@ namespace Bio {
 			BodyPart[] parts = new BodyPart[0];
 			BodyPlan body_plan = BodyPlan.none;
 			string[] tags = new string[0];
+			Action Reset = () => {
+				name = AnimalName.none;
+				mass = 0;
+				maturity_time = 0;
+				parent = BodyPart.root;
+				parts = new BodyPart[0];
+				body_plan = BodyPlan.none;
+				tags = new string[0];
+			};
 			int partcount = 0;
 			int plans = 0;
 			int animals = 0;
@@ -81,7 +91,7 @@ namespace Bio {
 					partcount++;
 				}
 				else if (type == "plan"){
-					new BodyPlan(name, body_plan, parts);
+					new BodyPlan(name, body_plan, parts, tags);
 					plans++;
 				}
 				else if (type == "animal"){
@@ -95,11 +105,7 @@ namespace Bio {
 				else
 					throw new NotImplementedException();
 				// reset
-				name = AnimalName.none;
-				mass = 0;
-				maturity_time = 0;
-				body_plan = BodyPlan.none;
-				tags = new string[0];
+				Reset();
 			}
 			Program.Log(String.Format("{0} bodyparts loaded", partcount), 0);
 			Program.Log(String.Format("{0} bodyplans loaded", plans), 0);
@@ -222,13 +228,16 @@ namespace Bio {
 		public static readonly List<BodyPlan> bodyPlans = new List<BodyPlan>();
 		AnimalName name;
 		BodyPart[] parts;
-		BodyPlan(string n, BodyPart[] p){
+		string[] tags;
+		BodyPlan(string n){
 			name = new AnimalName(n);
-			parts = p;
+			tags = new string[0];
+			parts = new BodyPart[0];
 			bodyPlans.Append(this);
 		}
-		public BodyPlan(AnimalName n, BodyPlan b, BodyPart[] p){
+		public BodyPlan(AnimalName n, BodyPlan b, BodyPart[] p, string[] t){
 			name = n;
+			tags = t;
 			if (b == null)
 				parts = p;
 			else
@@ -239,7 +248,7 @@ namespace Bio {
 			return bodyPlans.Find(bp => bp.name.generic == s);
 		}
 		// useful templates
-		public static readonly BodyPlan none = new BodyPlan("none", new BodyPart[0]);
+		public static readonly BodyPlan none = new BodyPlan("none");
 	}
 	class Plant : Lifeform{
 		static readonly List<Plant> plants = new List<Plant>();
