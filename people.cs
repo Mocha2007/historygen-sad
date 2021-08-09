@@ -47,6 +47,8 @@ namespace Person {
 			antonym = ant;
 			axes.Add(this);
 		}
+		// https://en.wikipedia.org/wiki/Big_Five_personality_traits ???
+		// https://en.wikipedia.org/wiki/HEXACO_model_of_personality_structure ???
 		static readonly PersonalityAxis extraversion = new PersonalityAxis("extraversion", "introversion");
 	}
 	class Relation {
