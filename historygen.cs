@@ -776,7 +776,7 @@ class WorldTile {
 	void DrawMinimap(){
 		int size = Program.tooltip_width - 2;
 		int left = World.size*2 + 1;
-		int top = World.size - size - 5;
+		int top = World.size - size - 6;
 		Action<string> Print = s => {
 			Program.console.Print(left, top, s, Color.Silver);
 			top++;
@@ -785,9 +785,10 @@ class WorldTile {
 		octaves = 10;
 		Tuple<int, int> t = tile_index;
 		Print(String.Format("Minimap ({0}, {1})", t.Item1, t.Item2));
-		Print(String.Format("Scale: {0}; {1}x{1}", ScaleString(), 32/minimap_scale));
-		Print(String.Format("Chars: {0}", Mapping.char_mode_name));
-		Print(String.Format("Color: {0}", Mapping.color_mode_name));
+		Print("Scale (+-):");
+		Print(String.Format("    {0}; {1}x{1}", ScaleString(), 32/minimap_scale));
+		Print(String.Format("Chars (x): {0}", Mapping.char_mode_name));
+		Print(String.Format("Color (z): {0}", Mapping.color_mode_name));
 		// show seed
 		Program.console.Print(left, World.size-1, Program.seed.ToString(), Color.White);
 		// actual map part

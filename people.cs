@@ -93,7 +93,13 @@ namespace People {
 			return string.Join(' ', s);
 		}
 		public static Sexuality Random(){
-			return new Sexuality(MochaRandom.Bool(), MochaRandom.Bool(), MochaRandom.Bool(), MochaRandom.Bool());
+			return new Sexuality(
+				MochaRandom.Bool(),
+				MochaRandom.Bool(),
+				MochaRandom.Bool(),
+				MochaRandom.Bool(),
+				MochaRandom.Bool()
+			);
 		}
 	}
 	class Skill {
