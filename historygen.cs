@@ -24,6 +24,7 @@ class Program {
 	static readonly int window_height = World.size + log_history.Length;
 	static readonly int window_width = World.size*2 + tooltip_width;
 	static void Main(string[] args){
+		People.Person p = People.Person.Random();
 		// clear log
 		File.WriteAllText("log.txt", "");
 		// sadconsole stuff
