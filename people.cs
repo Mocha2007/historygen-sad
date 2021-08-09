@@ -22,43 +22,32 @@ namespace Person {
 		}
 	}
 	// subtypes
-	class MBTI {
-		static readonly string key = "eisntfjp";
-		readonly bool axis1, axis2, axis3, axis4;
-		MBTI(bool a1, bool a2, bool a3, bool a4){
-			axis1 = a1;
-			axis2 = a2;
-			axis3 = a3;
-			axis4 = a4;
-		}
-		string Name(){
-			return string.Join("", new char[]{
-				key[axis1 ? 1 : 0],
-				key[axis2 ? 3 : 2],
-				key[axis3 ? 5 : 4],
-				key[axis4 ? 7 : 6],
-			});
-		}
-		public static MBTI Random(){
-			return new MBTI(MochaRandom.Bool(), MochaRandom.Bool(), MochaRandom.Bool(), MochaRandom.Bool());
-		}
-	}
 	class Personality {
-		// 128 = neutral; 255 = love; 0 = hate
-		readonly byte[] lifeformPrefs, resourcePrefs;
-		readonly MBTI mbti;
-		Personality(byte[] lp, byte[] rp, MBTI m){
+		// prefs: 128 = neutral; 255 = love; 0 = hate
+		// axes: 128 = neutral; 255 = high; 0 = low
+		readonly byte[] lifeformPrefs, resourcePrefs, personalityAxisValues;
+		Personality(byte[] pav, byte[] lp, byte[] rp){
+			personalityAxisValues = pav;
 			lifeformPrefs = lp;
 			resourcePrefs = rp;
-			mbti = m;
 		}
 		public static Personality Random(){
 			return new Personality(
 				Bio.Lifeform.lifeforms.Select(r => MochaRandom.Byte()).ToArray(),
 				Resource.resources.Select(r => MochaRandom.Byte()).ToArray(),
-				MBTI.Random()
+				PersonalityAxis.axes.Select(a => MochaRandom.Byte()).ToArray()
 			);
 		}
+	}
+	class PersonalityAxis {
+		public static readonly List<PersonalityAxis> axes = new List<PersonalityAxis>();
+		readonly string name, antonym;
+		PersonalityAxis(string n, string ant){
+			name = n;
+			antonym = ant;
+			axes.Add(this);
+		}
+		static readonly PersonalityAxis extraversion = new PersonalityAxis("extraversion", "introversion");
 	}
 	class Relation {
 		// friends, family, etc...
