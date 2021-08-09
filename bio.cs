@@ -1,8 +1,10 @@
 namespace Bio {
-	class Animal {
-		readonly BodyPart[] parts;
+	class Lifeform {
 		readonly string name;
 		readonly int mass; // in grams
+	}
+	class Animal : Lifeform {
+		readonly BodyPart[] parts;
 		readonly bool carnivorous, herbivorous;
 	}
 	class BodyPart {
@@ -26,11 +28,10 @@ namespace Bio {
 		}
 		static readonly BodyPart head = new BodyPart("head");
 	}
-	class Plant {
+	class Plant : Lifeform{
 		readonly bool deciduous;
 		// 0 = moss/lichen/grass; 1 = small plant-like (think weed); 2 = bushy; 3 = tree
 		readonly byte type;
 		readonly int maturity_time; // in days???
-		readonly int max_mass; // in g
 	}
 }
