@@ -1,48 +1,112 @@
+using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Bio {
 	class Lifeform {
 		public static readonly List<Lifeform> lifeforms = new List<Lifeform>();
-		readonly string name;
+		readonly AnimalName name;
 		readonly int mass; // in grams
-		public Lifeform(string s, int m){
+		readonly int maturity_time; // in days???
+		readonly string[] tags;
+		public Lifeform(AnimalName s, int mass, int mat, string[] t){
 			name = s;
-			mass = m;
+			this.mass = mass;
+			maturity_time = mat;
+			tags = t;
 			lifeforms.Append(this);
+		}
+		public static void ParseData(){
+			string[] raw = File.ReadAllLines("data/bio.dat").Select(line =>
+				Regex.Replace(line.ToLower(), @"^\s+|\s+$", "") // set lowercase; remove leading/trailing whitespace
+			).ToArray();
+			string type = "";
+			AnimalName name = AnimalName.none;
+			int mass = 0;
+			int maturity_time = 0;
+			BodyPlan body_plan = BodyPlan.none;
+			string[] tags = new string[0];
+			int animals = 0;
+			int plants = 0;
+			foreach (string line in raw){
+				string[] split = line.Split(" ");
+				string kw = split[0];
+				switch (kw){
+					case "animal":
+					case "plant":
+						type = kw;
+						continue;
+					case "name":
+						name = new AnimalName(split[1]); // todo
+						continue;
+					case "mass":
+						mass = int.Parse(split[1]);
+						continue;
+					case "maturity_time":
+						maturity_time = int.Parse(split[1]);
+						continue;
+					case "bodyplan":
+						body_plan = BodyPlan.FromName(split[1]);
+						continue;
+					case "tags":
+						tags = split.Skip(1).ToArray();
+						continue;
+					case "end":
+						break; // handled below
+					default:
+						throw new ArgumentOutOfRangeException("invalid datafile keyword");
+				}
+				// handle end
+				if (type == "animal"){
+					new Animal(name, mass, maturity_time, tags, body_plan);
+					animals++;
+				}
+				else if (type == "plant"){
+					new Plant(name, mass, maturity_time, tags);
+					plants++;
+				}
+				else
+					throw new NotImplementedException();
+				// reset
+				name = AnimalName.none;
+				mass = 0;
+				maturity_time = 0;
+				body_plan = BodyPlan.none;
+				tags = new string[0];
+			}
+			Program.Log(String.Format("{0} plants loaded", plants), 0);
+			Program.Log(String.Format("{0} animals loaded", animals), 0);
 		}
 	}
 	class Animal : Lifeform {
 		static readonly List<Animal> animals = new List<Animal>();
-		readonly BodyPart[] parts;
-		readonly bool carnivorous, herbivorous;
-		readonly AnimalName detailedName;
-		readonly string[] tags;
-		Animal(string s, int m, AnimalName n, BodyPart[] p, bool c, bool h, string[] t) : base(s, m){
-			parts = p;
-			carnivorous = c;
-			herbivorous = h;
-			detailedName = n;
-			tags = t;
+		readonly BodyPlan bodyplan;
+		public Animal(AnimalName n, int mas, int mat, string[] t, BodyPlan p) : base(n, mas, mat, t){
+			bodyplan = p;
 			animals.Append(this);
 		}
+		/*
 		static readonly Animal cat = new Animal(
-			"cat",
-			4000,
 			new AnimalName(
 				"cat",
 				"cats",
 				"kitten",
 				"kittens"
 			),
-			BodyPart.generic_mammal,
-			true, true,
-			new string[]{"intelligent"}
+			4000,
+			365,
+			new string[]{"intelligent", "omnivore"},
+			BodyPlan.generic_mammal
 		);
+		*/
 	}
 	class AnimalName {
-		readonly string generic, generic_pl, male_, male_pl_, female_, female_pl_,
+		public readonly string generic, generic_pl;
+		readonly string male_, male_pl_, female_, female_pl_,
 			young_, young_pl_, male_young_, male_young_pl_, female_young_, female_young_pl_;
+		public static readonly AnimalName none = new AnimalName("unnamed");
 		// HAS ALL NAMES
 		public AnimalName(string g, string gp, string m, string mp, string f, string fp,
 				string y, string yp, string my, string myp, string fy, string fyp){
@@ -125,28 +189,41 @@ namespace Bio {
 			tags = new string[0];
 		}
 		static readonly BodyPart root = new BodyPart("root");
-		static readonly BodyPart fur = new BodyPart("fur");
-		static readonly BodyPart head = new BodyPart("head");
+		public static readonly BodyPart fur = new BodyPart("fur");
+		public static readonly BodyPart head = new BodyPart("head");
+	}
+	class BodyPlan {
+		public static readonly List<BodyPlan> bodyPlans = new List<BodyPlan>();
+		string name;
+		BodyPart[] parts;
+		BodyPlan(string n, BodyPart[] p){
+			name = n;
+			parts = p;
+			bodyPlans.Append(this);
+		}
+		BodyPlan(string n, BodyPlan b, BodyPart[] p){
+			name = n;
+			parts = b.parts.Concat(p).ToArray();
+			bodyPlans.Append(this);
+		}
+		public static BodyPlan FromName(string s){
+			return bodyPlans.Find(bp => bp.name == s);
+		}
 		// useful templates
-		public static readonly BodyPart[] quadruped = new BodyPart[]{
-			head
-		};
-		public static readonly BodyPart[] generic_mammal = new BodyPart[]{}.Append(
-			fur
-		).ToArray();
+		public static readonly BodyPlan none = new BodyPlan("none", new BodyPart[0]);
+		public static readonly BodyPlan quadruped = new BodyPlan("quadruped", new BodyPart[]{
+			BodyPart.head
+		});
+		public static readonly BodyPlan generic_mammal = new BodyPlan("generic_mammal", quadruped, new BodyPart[]{
+			BodyPart.fur
+		});
 	}
 	class Plant : Lifeform{
 		static readonly List<Plant> plants = new List<Plant>();
-		readonly bool deciduous;
 		// 0 = moss/lichen/grass; 1 = small plant-like (think weed); 2 = bushy; 3 = tree
-		readonly byte type;
-		readonly int maturity_time; // in days???
-		Plant(string s, int m, bool d, byte t, int mt) : base(s, m){
-			deciduous = d;
-			type = t;
-			maturity_time = mt;
+		public Plant(AnimalName n, int m, int mt, string[] t) : base(n, m, mt, t){
 			plants.Append(this);
 		}
-		static readonly Plant pine = new Plant("pine", 2500000, false, 3, 25*365);
+		// static readonly Plant pine = new Plant(new AnimalName("pine", "pines"), 2500000, 25*365, new string[]{"tree"});
 	}
 }

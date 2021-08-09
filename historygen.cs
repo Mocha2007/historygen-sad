@@ -69,7 +69,9 @@ class Program {
 			world = World.Random();
 			long t_end = DateTime.Now.Ticks;
 			Log(String.Format("worldgen took {0} ms", (t_end - t_start)/10000));
+			// plants and critters
 			world.Print();
+			Bio.Lifeform.ParseData();
 		}).Start();
 	}
 	public static void NewSeed(bool change_seed){
