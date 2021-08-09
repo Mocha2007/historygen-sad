@@ -49,6 +49,7 @@ namespace Person {
 		}
 		// https://en.wikipedia.org/wiki/Big_Five_personality_traits ???
 		// https://en.wikipedia.org/wiki/HEXACO_model_of_personality_structure ???
+		// https://en.wikipedia.org/wiki/Facet_%28psychology%29 ???
 		static readonly PersonalityAxis extraversion = new PersonalityAxis("extraversion", "introversion");
 	}
 	class Relation {
