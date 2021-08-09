@@ -1,6 +1,6 @@
 plan
 	name vertebrate (generic vertebrate template)
-	parts skin body thorax heart abdomen kidney spleen stomach liver gut head eye nose neck throat brain mouth tongue
+	parts skin body thorax heart abdomen kidney stomach liver gut head eye nose neck throat brain mouth tongue
 	tags sexual
 end
 plan
