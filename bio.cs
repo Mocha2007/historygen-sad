@@ -82,7 +82,6 @@ namespace Bio {
 					case "end":
 						break; // handled below
 					default: // just a comment!
-						// throw new ArgumentOutOfRangeException("invalid datafile keyword");
 						continue;
 				}
 				// handle end
@@ -120,20 +119,6 @@ namespace Bio {
 			bodyplan = p;
 			animals.Append(this);
 		}
-		/*
-		static readonly Animal cat = new Animal(
-			new AnimalName(
-				"cat",
-				"cats",
-				"kitten",
-				"kittens"
-			),
-			4000,
-			365,
-			new string[]{"intelligent", "omnivore"},
-			BodyPlan.generic_mammal
-		);
-		*/
 	}
 	class AnimalName {
 		public readonly string generic, generic_pl;
@@ -252,10 +237,8 @@ namespace Bio {
 	}
 	class Plant : Lifeform{
 		static readonly List<Plant> plants = new List<Plant>();
-		// 0 = moss/lichen/grass; 1 = small plant-like (think weed); 2 = bushy; 3 = tree
 		public Plant(AnimalName n, int m, int mt, string[] t) : base(n, m, mt, t){
 			plants.Append(this);
 		}
-		// static readonly Plant pine = new Plant(new AnimalName("pine", "pines"), 2500000, 25*365, new string[]{"tree"});
 	}
 }
