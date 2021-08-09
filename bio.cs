@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Bio {
 	class Lifeform {
-		static readonly List<Lifeform> lifeforms = new List<Lifeform>();
+		public static readonly List<Lifeform> lifeforms = new List<Lifeform>();
 		readonly string name;
 		readonly int mass; // in grams
 		public Lifeform(string s, int m){

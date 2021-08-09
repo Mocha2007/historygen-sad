@@ -44,14 +44,19 @@ namespace Person {
 	}
 	class Personality {
 		// 128 = neutral; 255 = love; 0 = hate
-		readonly byte[] resoucePrefs;
+		readonly byte[] lifeformPrefs, resourcePrefs;
 		readonly MBTI mbti;
-		Personality(byte[] rp, MBTI m){
-			resoucePrefs = rp;
+		Personality(byte[] lp, byte[] rp, MBTI m){
+			lifeformPrefs = lp;
+			resourcePrefs = rp;
 			mbti = m;
 		}
 		public static Personality Random(){
-			return new Personality(Resource.resources.Select(r => MochaRandom.Byte()).ToArray(), MBTI.Random());
+			return new Personality(
+				Bio.Lifeform.lifeforms.Select(r => MochaRandom.Byte()).ToArray(),
+				Resource.resources.Select(r => MochaRandom.Byte()).ToArray(),
+				MBTI.Random()
+			);
 		}
 	}
 	class Relation {
