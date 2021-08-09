@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Resources;
 
-namespace People {
+namespace Person {
 	class Person {
+		// todo Culture
 		readonly bool gender; // 0=F; 1=M
 		readonly Personality personality;
 		readonly List<PersonalRelation> relations = new List<PersonalRelation>();
@@ -136,5 +137,21 @@ namespace People {
 		public static PersonalSkill[] BlankSlate(){
 			return Skill.skills.Select(s => new PersonalSkill(s)).ToArray();
 		}
+	}
+}
+
+namespace People {
+	class Country {
+		readonly Culture primaryCulture;
+	}
+	class Culture {
+		readonly Language language;
+		readonly Religion religion;
+	}
+	class Language {
+
+	}
+	class Religion {
+
 	}
 }
