@@ -236,11 +236,14 @@ namespace Bio {
 		}
 		public BodyPlan(AnimalName n, BodyPlan b, BodyPart[] p, string[] t){
 			name = n;
-			tags = t;
-			if (b == null)
+			if (b == null){
 				parts = p;
-			else
+				tags = t;
+			}
+			else {
 				parts = b.parts.Concat(p).ToArray();
+				tags = t.Concat(b.tags).ToArray();
+			}
 			bodyPlans.Append(this);
 		}
 		public static BodyPlan FromName(string s){

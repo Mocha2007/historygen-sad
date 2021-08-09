@@ -7,6 +7,24 @@ part
 	parent skin
 end
 
+body...
+part
+	name body bodies
+end
+part
+	name thorax thoraces
+	parent body
+end
+part
+	name lung lungs
+	parent thorax
+	tags breathing speech bilateral
+end
+part
+	name abdomen abdomina
+	parent body
+end
+
 head...
 part
 	name head heads
@@ -14,17 +32,26 @@ end
 part
 	name ear ears
 	parent head
-	tags hearing
+	tags hearing bilateral
 end
 part
 	name eye eyes
 	parent head
-	tags vision
+	tags vision bilateral
 end
 part
 	name nose noses
 	parent head
 	tags smell
+end
+part
+	name neck necks
+	parent head
+end
+part
+	name throat throats
+	parent neck
+	tags eating drinking breathing speech
 end
 
 mouth...
@@ -36,4 +63,26 @@ part
 	name tongue tongues
 	parent mouth
 	tags taste speech
+end
+
+limbs...
+part
+	name shoulder shoulders
+	parent thorax
+	tags joint bilateral
+end
+part
+	name wing wings
+	parent shoulder
+	tags flight bilateral
+end
+part
+	name aftarm aftarms
+	parent shoulder
+	tags bilateral
+end
+part
+	name elbow elbows
+	parent aftarm
+	tags joint bilateral
 end

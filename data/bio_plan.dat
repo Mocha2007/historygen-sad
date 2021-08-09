@@ -1,9 +1,30 @@
 plan
+	name vertebrate (generic vertebrate template)
+	parts skin body thorax abdomen head eye nose neck throat mouth tongue
+	tags sexual
+end
+plan
+	name tetrapod
+	parts lung ear shoulder
+	template vertebrate
+end
+plan
+	name avian
+	parts wing
+	template tetrapod
+end
+plan
 	name quadruped (generic quadruped template)
-	parts skin head ear eye nose mouth tongue
+	parts aftarm elbow
+	template tetrapod
 end
 plan
 	name mammal (generic mammal template)
 	parts fur
 	template quadruped
+end
+plan
+	name hominoid (eg. humans, dwarves, orcs, elves, ...)
+	template mammal
+	tags sapient
 end
