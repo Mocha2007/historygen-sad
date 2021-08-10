@@ -39,6 +39,7 @@ namespace Bio {
 			string[] tags = new string[0];
 			char c = '\0';
 			Color color = Color.Gray;
+			double dimorphism = 1;
 			Action Reset = () => {
 				name = AnimalName.none;
 				mass = 0;
@@ -50,6 +51,7 @@ namespace Bio {
 				tags = new string[0];
 				c = '\0';
 				color = Color.Gray;
+				dimorphism = 1;
 			};
 			int partcount = 0;
 			int plans = 0;
@@ -90,6 +92,9 @@ namespace Bio {
 					case "relsize":
 						relsize = ushort.Parse(split[1]);
 						continue;
+					case "dimorphism":
+						dimorphism = double.Parse(split[1]);
+						continue;
 					case "template":
 					case "bodyplan":
 						body_plan = BodyPlan.FromName(split[1]);
@@ -109,7 +114,7 @@ namespace Bio {
 					plans++;
 				}
 				else if (type == "animal"){
-					new Animal(name, mass, maturity_time, tags, body_plan, c, color);
+					new Animal(name, mass, maturity_time, tags, body_plan, c, color, dimorphism);
 					animals++;
 				}
 				else if (type == "plant"){
@@ -132,10 +137,12 @@ namespace Bio {
 		readonly BodyPlan bodyplan;
 		char c;
 		Color color;
-		public Animal(AnimalName n, int mas, int mat, string[] t, BodyPlan p, char c, Color col) : base(n, mas, mat, t){
+		double dimorphismConstant;
+		public Animal(AnimalName n, int mas, int mat, string[] t, BodyPlan p, char c, Color col, double d) : base(n, mas, mat, t){
 			bodyplan = p;
 			this.c = c;
 			color = col;
+			dimorphismConstant = d;
 			animals.Append(this);
 		}
 	}
