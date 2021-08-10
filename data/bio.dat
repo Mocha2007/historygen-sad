@@ -5,7 +5,7 @@ animal
 	maturity_time 365
 	dimorphism 1.3
 	bodyplan mammal
-	tags intelligent omnivore
+	tags intelligent carnivore
 end
 animal
 	name human humans man men woman women child children boy boys girl girls
@@ -14,6 +14,15 @@ animal
 	maturity_time 7300 (20 years)
 	dimorphism 1.2 (men will be 20% larger than women, on average)
 	bodyplan hominoid
+end
+animal
+	name ferret ferrets kit kits
+	icon 808000 f
+	mass 1350
+	maturity_time 183 (1/2 year)
+	dimorphism 1.7
+	bodyplan mammal
+	tags carnivore
 end
 plant
 	name pine pines
