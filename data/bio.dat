@@ -12,7 +12,7 @@ animal
 	icon 808000 H
 	mass 70000
 	maturity_time 7300 (20 years)
-	dimorphism 1.2 (men will be 20% larger than women, on average)
+	dimorphism 1.15 (men will be 15% larger than women, on average)
 	bodyplan hominoid
 end
 
