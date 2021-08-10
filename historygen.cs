@@ -389,7 +389,7 @@ class WorldTile {
 	static readonly double circumference = 40075.017;
 	// elevation - m; rainfall - mm; temperature - degrees celsius * 100
 	public readonly short elevation;
-	readonly double x, y;
+	public readonly double x, y;
 	Resource resource_cache;
 	public int river_inflow; // how many mm anually get converted into streams and rivers
 	readonly short[] rainfall;

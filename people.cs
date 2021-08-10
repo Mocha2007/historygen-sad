@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Resources;
+using Noise;
 
 namespace Person {
 	class Person {
@@ -232,9 +233,20 @@ namespace People {
 		}
 	}
 	class Country : Construct {
+		public static readonly byte maxCountries = MochaRandom.Byte();
 		readonly Culture primaryCulture;
 		Country(string name, Culture primary) : base(name){
 			primaryCulture = primary;
+		}
+		// Simplex.Noise(x, y, r.id, 0)
+		// Program.LatLongToSpherical(lat, long) => x,y,z
+		public static byte CountryAtTile(double lat, double lon){
+			Tuple<double, double, double> xyz = Program.LatLong2Spherical(lat, lon);
+			// v starts in [-1, 1]
+			double v = Simplex.Noise(xyz.Item1, xyz.Item2, xyz.Item3, 0);
+			v++; // now in [0, 2]
+			v /= 2; // now in [0, 1]
+			return (byte)(v*maxCountries);
 		}
 	}
 	class Culture : Construct {

@@ -338,8 +338,11 @@ namespace Mappings {
 			return Heat(Program.Remap(t, 0, WorldTile.temperature_anomaly, 0, 1));
 		}
 		static Color ColorTest(WorldTile w){
+			double lat = w.y*Math.PI;
+			double lon = w.x*Math.PI;
 			// outflow direction points back to inflow?
-			return !w.isLand ? Color.Blue : w.downstream.downstream == w ? Color.Red : Color.Lime;
+			byte countryID = People.Country.CountryAtTile(lat, lon);
+			return Heat((double)countryID/People.Country.maxCountries);
 			// return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Lime : Color.Red;
 			// return !w.isLand ? Color.Blue : Resource.silk.TileTest(w) ? Color.Lime : Color.Red;
 		}
