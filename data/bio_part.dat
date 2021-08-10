@@ -7,13 +7,15 @@ part
 	parent skin
 end
 
-body...
+trunk...
 part
-	name body bodies
+	name trunk trunks
+	relsize 33600
 end
 part
 	name thorax thoraces
-	parent body
+	parent trunk
+	relsize 11500
 end
 part
 	name lung lungs
@@ -27,7 +29,8 @@ part
 end
 part
 	name abdomen abdomina
-	parent body
+	parent trunk
+	relsize 7800
 end
 part
 	name kidney kidneys
@@ -53,6 +56,7 @@ end
 head...
 part
 	name head heads
+	relsize 5100
 end
 part
 	name ear ears
@@ -111,6 +115,7 @@ part
 	name aftarm aftarms
 	parent shoulder
 	tags bilateral
+	relsize 1900
 end
 part
 	name elbow elbows
@@ -121,6 +126,7 @@ part
 	name forearm forearms
 	parent elbow
 	tags bilateral
+	relsize 1100
 end
 part
 	name wrist wrists
@@ -131,6 +137,7 @@ part
 	name hand hands
 	parent wrist
 	tags grasping bilateral
+	relsize 357
 end
 lower limbs...
 part
@@ -142,6 +149,7 @@ part
 	name thigh thighs
 	parent hip
 	tags bilateral
+	relsize 6900
 end
 part
 	name knee knees
@@ -149,18 +157,20 @@ part
 	tags joint bilateral
 end
 part
-	name shin shins
+	name shank shanks
 	parent knee
 	tags bilateral
+	relsize 3100
 end
 part
 	name ankle ankles
-	parent shin
+	parent shank
 	tags joint bilateral
 end
 part
 	name foot feet
 	parent ankle
 	tags walking bilateral
+	relsize 856
 end
 // haven't added the below to plans yet - todo!

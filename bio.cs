@@ -32,6 +32,7 @@ namespace Bio {
 			AnimalName name = AnimalName.none;
 			int mass = 0;
 			int maturity_time = 0;
+			ushort relsize = 0;
 			BodyPart parent = BodyPart.root;
 			BodyPart[] parts = new BodyPart[0];
 			BodyPlan body_plan = BodyPlan.none;
@@ -42,6 +43,7 @@ namespace Bio {
 				name = AnimalName.none;
 				mass = 0;
 				maturity_time = 0;
+				relsize = 0;
 				parent = BodyPart.root;
 				parts = new BodyPart[0];
 				body_plan = BodyPlan.none;
@@ -85,6 +87,9 @@ namespace Bio {
 					case "maturity_time":
 						maturity_time = int.Parse(split[1]);
 						continue;
+					case "relsize":
+						relsize = ushort.Parse(split[1]);
+						continue;
 					case "template":
 					case "bodyplan":
 						body_plan = BodyPlan.FromName(split[1]);
@@ -96,7 +101,7 @@ namespace Bio {
 				}
 				// handle end
 				if (type == "part"){
-					new BodyPart(name, parent, tags);
+					new BodyPart(name, parent, tags, relsize);
 					partcount++;
 				}
 				else if (type == "plan"){
@@ -206,16 +211,22 @@ namespace Bio {
 		readonly AnimalName name;
 		readonly BodyPart parent;
 		readonly string[] tags;
-		public BodyPart(AnimalName n, BodyPart p, string[] t){
+		readonly ushort relsize; // this is primarily based on average human mass in grams
+		/* Sources:
+			https://exrx.net/Kinesiology/Segments
+		*/
+		public BodyPart(AnimalName n, BodyPart p, string[] t, ushort r){
 			name = n;
 			parent = p;
 			tags = t;
+			relsize = r;
 			bodyParts.Add(this);
 		}
 		BodyPart(string n){
 			name = new AnimalName(n);
 			parent = root;
 			tags = new string[0];
+			relsize = 0;
 			bodyParts.Add(this);
 		}
 		public static BodyPart FromName(string s){
