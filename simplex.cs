@@ -13,7 +13,7 @@ namespace Noise {
 			new int[]{1,1,1,0}, new int[]{1,1,-1,0}, new int[]{1,-1,1,0}, new int[]{1,-1,-1,0},
 			new int[]{-1,1,1,0}, new int[]{-1,1,-1,0}, new int[]{-1,-1,1,0}, new int[]{-1,-1,-1,0}
 		};
-		static int[] p = new int[256];
+		public static int[] p = new int[256];
 		// To remove the need for index wrapping, double the permutation table length
 		static int[] perm = new int[512];
 		// A lookup table to traverse the simplex around a given point in 4D.

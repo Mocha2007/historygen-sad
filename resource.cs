@@ -5,7 +5,7 @@ using System.Linq; // enumerable operations
 using Microsoft.Xna.Framework;
 
 namespace Resources {
-	static class ResourceRNG {
+	static class ResourceRNG { // todo move this to mocharandom
 		static int iteration = 0;
 		public static void SimplexShuffle<T>(this IList<T> list, double x, double y){
 			// https://stackoverflow.com/a/1262619/2579798

@@ -241,12 +241,15 @@ namespace People {
 		// Simplex.Noise(x, y, r.id, 0)
 		// Program.LatLongToSpherical(lat, long) => x,y,z
 		public static byte CountryAtTile(double lat, double lon){
+			List<int> k = Simplex.p.ToList();
+			k.SimplexShuffle(lat, lon);
 			Tuple<double, double, double> xyz = Program.LatLong2Spherical(lat, lon);
 			// v starts in [-1, 1]
 			double v = Simplex.Noise(xyz.Item1, xyz.Item2, xyz.Item3, 0);
 			v++; // now in [0, 2]
 			v /= 2; // now in [0, 1]
-			return (byte)(v*maxCountries);
+			byte temp_id = (byte)(v*maxCountries);
+			return (byte)k[temp_id];
 		}
 	}
 	class Culture : Construct {
