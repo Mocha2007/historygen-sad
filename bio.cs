@@ -134,6 +134,7 @@ namespace Bio {
 	}
 	class Animal : Lifeform {
 		static readonly List<Animal> animals = new List<Animal>();
+		static readonly double standardDeviationAsAFactorOfMass = 0.16; // sigma = 0.16*mean
 		readonly BodyPlan bodyplan;
 		char c;
 		Color color;
