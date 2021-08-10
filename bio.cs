@@ -66,7 +66,7 @@ namespace Bio {
 						type = kw;
 						continue;
 					case "name":
-						name = new AnimalName(split[1]); // todo
+						name = new AnimalName(split[1]);
 						continue;
 					case "tags":
 						tags = split.Skip(1).ToArray();

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Resources;
 
 namespace Person {
@@ -169,20 +171,93 @@ namespace Person {
 }
 
 namespace People {
+	static class Core {
+		public static void ParseData(){
+			IEnumerable<string> raw = File.ReadAllLines("data/language.dat")
+				.Select(line =>
+					Regex.Replace(line.ToLower(), @"^\s+|\s+$", "") // set lowercase; remove leading/trailing whitespace
+				);
+			string type = "";
+			// MAKE SURE TO COPY THESE TO RESET
+			string name = "";
+			string[] given = new string[0];
+			string[] family = new string[0];
+			Action Reset = () => {
+				name = "";
+				given = new string[0];
+				family = new string[0];
+			};
+			int namingcount = 0;
+			foreach (string line in raw){
+				string[] split = line.Split(" ");
+				string kw = split[0];
+				switch (kw){
+					case "naming":
+						type = kw;
+						continue;
+					case "name":
+						name = split[1];
+						continue;
+					case "given":
+						given = split.Skip(1).ToArray();
+						continue;
+					case "family":
+						given = split.Skip(1).ToArray();
+						continue;
+					case "end":
+						break; // handled below
+					default: // just a comment!
+						continue;
+				}
+				// handle end
+				if (type == "naming"){
+					new NamingSystem(name, given, family);
+					namingcount++;
+				}
+				else
+					throw new NotImplementedException();
+				// reset
+				Reset();
+			}
+			Program.Log(String.Format("{0} naming systems loaded", namingcount), 0);
+		}
+	}
 	class Construct {
 		string name;
+		public Construct(string name){
+			this.name = name;
+		}
 	}
 	class Country : Construct {
 		readonly Culture primaryCulture;
+		Country(string name, Culture primary) : base(name){
+			primaryCulture = primary;
+		}
 	}
 	class Culture : Construct {
 		readonly Language language;
 		readonly Religion religion;
+		Culture(string name, Language l, Religion r) : base(name){
+			language = l;
+			religion = r;
+		}
 	}
 	class Language : Construct {
-
+		Language(string name) : base(name){}	
+	}
+	class NamingSystem : Construct {
+		/* todo list
+			-patrynomic/matrynomic
+			-marriage name/maiden name
+			-family name/given name order
+		*/
+		readonly string[] familyNameBank, givenNameBank;
+		public NamingSystem(string name, string[] given, string[] family) : base(name){
+			givenNameBank = given;
+			familyNameBank = family;
+		}
 	}
 	class Religion : Construct {
-
+		Religion(string name) : base(name){}
 	}
 }

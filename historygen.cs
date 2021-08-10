@@ -72,6 +72,7 @@ class Program {
 			// plants and critters
 			world.Print();
 			Bio.Lifeform.ParseData();
+			People.Core.ParseData();
 		}).Start();
 	}
 	public static void NewSeed(bool change_seed){

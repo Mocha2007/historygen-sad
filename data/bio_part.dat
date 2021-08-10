@@ -1,6 +1,7 @@
 systemic...
 part
 	name skin
+	relsize 4500
 end
 part
 	name fur
