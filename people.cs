@@ -14,13 +14,16 @@ namespace Person {
 		readonly Sexuality sexuality;
 		readonly PersonalSkill[] skills = PersonalSkill.BlankSlate();
 		// todo: memories???
-		Person(bool g, Personality p, Sexuality s){
+		readonly string name;
+		Person(string n, bool g, Personality p, Sexuality s){
+			name = n;
 			gender = g;
 			personality = p;
 			sexuality = s;
 		}
 		public static Person Random(){
-			return new Person(MochaRandom.Bool(), Personality.Random(), Sexuality.Random());
+			return new Person(People.NamingSystem.systems[0].Random(),
+				MochaRandom.Bool(), Personality.Random(), Sexuality.Random());
 		}
 	}
 	// subtypes
@@ -246,6 +249,7 @@ namespace People {
 		Language(string name) : base(name){}	
 	}
 	class NamingSystem : Construct {
+		public static readonly List<NamingSystem> systems = new List<NamingSystem>();
 		/* todo list
 			-patrynomic/matrynomic
 			-marriage name/maiden name
@@ -255,6 +259,12 @@ namespace People {
 		public NamingSystem(string name, string[] given, string[] family) : base(name){
 			givenNameBank = given;
 			familyNameBank = family;
+			systems.Add(this);
+		}
+		public string Random(){
+			int fi = Program.rng.Next(0, familyNameBank.Length);
+			int gi = Program.rng.Next(0, givenNameBank.Length);
+			return String.Format("{0} {1}", familyNameBank[fi], givenNameBank[gi]);
 		}
 	}
 	class Religion : Construct {
