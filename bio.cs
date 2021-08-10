@@ -214,6 +214,7 @@ namespace Bio {
 		readonly ushort relsize; // this is primarily based on average human mass in grams
 		/* Sources:
 			https://exrx.net/Kinesiology/Segments
+			https://www.hindawi.com/journals/ari/2018/4687538/
 		*/
 		public BodyPart(AnimalName n, BodyPart p, string[] t, ushort r){
 			name = n;

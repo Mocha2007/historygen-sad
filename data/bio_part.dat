@@ -21,11 +21,13 @@ part
 	name lung lungs
 	parent thorax
 	tags breathing speech bilateral
+	relsize 500
 end
 part
 	name heart hearts
 	parent thorax
 	tags circulation
+	relsize 300
 end
 part
 	name abdomen abdomina
@@ -36,6 +38,7 @@ part
 	name kidney kidneys
 	parent abdomen
 	tags filtration bilateral
+	relsize 115
 end
 part
 	name stomach stomachs
@@ -46,11 +49,13 @@ part
 	name liver livers
 	parent abdomen
 	tags digestion
+	relsize 1300
 end
 part
 	name gut guts
 	parent abdomen
 	tags digestion
+	relsize 3400
 end
 
 head...
@@ -86,6 +91,7 @@ part
 	name brain brains
 	parent head
 	tags thought
+	relsize 1300
 end
 
 mouth...
