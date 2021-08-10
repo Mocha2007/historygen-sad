@@ -223,17 +223,20 @@ namespace Bio {
 			relsize = r;
 			bodyParts.Add(this);
 		}
-		BodyPart(string n){
+		BodyPart(string n, ushort r){
 			name = new AnimalName(n);
 			parent = root;
 			tags = new string[0];
-			relsize = 0;
+			relsize = r;
 			bodyParts.Add(this);
+		}
+		double massFraction {
+			get { return (double)relsize/root.relsize; }
 		}
 		public static BodyPart FromName(string s){
 			return bodyParts.Find(bp => bp.name.generic == s);
 		}
-		public static readonly BodyPart root = new BodyPart("root");
+		public static readonly BodyPart root = new BodyPart("root", 62000);
 	}
 	class BodyPlan {
 		public static readonly List<BodyPlan> bodyPlans = new List<BodyPlan>();
