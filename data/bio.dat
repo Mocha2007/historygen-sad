@@ -15,6 +15,17 @@ animal
 	dimorphism 1.2 (men will be 20% larger than women, on average)
 	bodyplan hominoid
 end
+
+other, non-sample animals...
+animal
+	name chicken chickens rooster roosters hen hens chick chicks
+	icon ffffff c
+	mass 3400
+	maturity_time 170
+	dimorphism 1.2
+	bodyplan avian
+	tags herbivore flightless
+end
 animal
 	name ferret ferrets kit kits
 	icon 808000 f
@@ -24,6 +35,34 @@ animal
 	bodyplan mammal
 	tags carnivore
 end
+animal
+	name fox foxes dogfox dogfoxes vixen vixens cub cubs
+	icon ff8000 f
+	mass 6100
+	maturity_time 365 (guess)
+	dimorphism 1.1 (guess)
+	bodyplan mammal
+	tags carnivore
+end
+animal
+	name horse horses stallion stallions mare mares foal foals colt colts filly fillies
+	icon 804000 h
+	mass 500000
+	maturity_time 2200
+	bodyplan mammal
+	tags herbivore grazer
+end
+animal
+	name wolf wolves cub cubs
+	icon 808080 w
+	mass 38500
+	maturity_time 365
+	dimorphism 1.1
+	bodyplan mammal
+	tags carnivore
+end
+
+plants...
 plant
 	name pine pines
 	mass 2500000
