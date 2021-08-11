@@ -233,7 +233,7 @@ namespace People {
 		}
 	}
 	class Country : Construct {
-		public static readonly byte maxCountries = 64;
+		public static readonly int maxCountries = 254;
 		static readonly List<int> randomizedCountryIdList = new byte[maxCountries].Select((_, i) => i+1).ToList();
 		public static void Initialize(){
 			randomizedCountryIdList.SimplexShuffle(0, 0);
@@ -252,11 +252,12 @@ namespace People {
 			Tuple<double, double, double> xyz = Program.LatLong2Spherical(lat, lon);
 			// v starts in [-1, 1]
 			double scale = 1;
-			double v = Simplex.Noise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 10);
+			// two simplex "layers", one for the first 4 bits, one for the last 4 bits, to make it less ring-y
+			double v = Simplex.OctaveNoise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 10, 3);
 			v++; // now in [0, 2]
 			v /= 2; // now in [0, 1]
-			byte temp_id = (byte)(v*maxCountries);
-			return (byte)randomizedCountryIdList[temp_id];
+			int temp_id = (int)(v*maxCountries);
+			return (byte)(randomizedCountryIdList[Program.Mod(temp_id, maxCountries)]+1);
 		}
 	}
 	class Culture : Construct {
