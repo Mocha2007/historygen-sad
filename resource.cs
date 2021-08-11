@@ -8,6 +8,7 @@ namespace Resources {
 	static class ResourceRNG { // todo move this to mocharandom
 		static int iteration = 0;
 		public static void SimplexShuffle<T>(this IList<T> list, double x, double y){
+			Reset();
 			// https://stackoverflow.com/a/1262619/2579798
 			int n = list.Count;  
 			while (n > 1) {  
@@ -17,7 +18,6 @@ namespace Resources {
 				list[k] = list[n];  
 				list[n] = value;  
 			}
-			Reset();
 		}
 		static double Next(double x, double y){
 			Tuple<double, double, double> xyz = Program.LatLong2Spherical(y*Math.PI, x*Math.PI);

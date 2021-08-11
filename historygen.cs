@@ -586,7 +586,6 @@ class WorldTile {
 				resource_cache = Resource.iron;
 				return Resource.iron;
 			}
-			ResourceRNG.Reset();
 			rs.SimplexShuffle(x, y);
 			while (0 < rs.Count){
 				double s = rs.Select(res => res.worldgen_weight).Sum();
