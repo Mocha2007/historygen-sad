@@ -233,7 +233,7 @@ namespace People {
 		}
 	}
 	class Country : Construct {
-		public static readonly byte maxCountries = MochaRandom.Byte();
+		public static readonly byte maxCountries = 64;
 		readonly Culture primaryCulture;
 		Country(string name, Culture primary) : base(name){
 			primaryCulture = primary;
@@ -241,7 +241,7 @@ namespace People {
 		// Simplex.Noise(x, y, r.id, 0)
 		// Program.LatLongToSpherical(lat, long) => x,y,z
 		public static byte CountryAtTile(double lat, double lon){
-			List<int> k = new byte[256].Select((_, i) => i).ToList();
+			List<int> k = new byte[maxCountries].Select((_, i) => i).ToList();
 			k.SimplexShuffle(lat, lon);
 			Tuple<double, double, double> xyz = Program.LatLong2Spherical(lat, lon);
 			// v starts in [-1, 1]

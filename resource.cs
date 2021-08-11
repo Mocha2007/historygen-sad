@@ -17,6 +17,7 @@ namespace Resources {
 				list[k] = list[n];  
 				list[n] = value;  
 			}
+			Reset();
 		}
 		static double Next(double x, double y){
 			Tuple<double, double, double> xyz = Program.LatLong2Spherical(y*Math.PI, x*Math.PI);
