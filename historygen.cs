@@ -73,6 +73,7 @@ class Program {
 			world.Print();
 			Bio.Lifeform.ParseData();
 			People.Core.ParseData();
+			People.Country.Initialize();
 		}).Start();
 	}
 	public static void NewSeed(bool change_seed){
