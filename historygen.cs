@@ -798,10 +798,10 @@ class WorldTile {
 		get {
 			double delta = 1e-2/minimap_scale;
 			return new WorldTile[]{
-				new WorldTile(x-delta, y, RandomAltitude(x-delta, y), RandomRainfall(x-delta, y)),
-				new WorldTile(x+delta, y, RandomAltitude(x+delta, y), RandomRainfall(x+delta, y)),
-				new WorldTile(x, y-delta, RandomAltitude(x, y-delta), RandomRainfall(x, y-delta)),
-				new WorldTile(x, y+delta, RandomAltitude(x, y+delta), RandomRainfall(x, y+delta)),
+				Random(x-delta, y),
+				Random(x+delta, y),
+				Random(x, y-delta),
+				Random(x, y+delta),
 			};
 		}
 	}
