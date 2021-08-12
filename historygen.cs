@@ -228,6 +228,11 @@ class World {
 	}
 	int cursor_x = size;
 	int cursor_y = size/2;
+	public WorldTile GetRandomTile(){
+		int x = Program.rng.Next(0, size);
+		int y = Program.rng.Next(0, size*2);
+		return tiles[x, y];
+	}
 	// static methods
 	public static World Random(){
 		WorldTile[,] w = new WorldTile[size, size*2];
@@ -415,6 +420,7 @@ class WorldTile {
 	static readonly byte temperature_scale_geographic = 5;
 	static readonly byte temperature_scale_seasonal = 5;
 	public static readonly short temperature_anomaly = 4000;
+	public int owner = -1;
 	WorldTile(double x, double y, short elevation, short[] rainfall){
 		double raw_heat = Math.Sin(Math.PI * y); // heat, [0, 1]
 		temperature = new short[12];
@@ -765,9 +771,12 @@ class WorldTile {
 		Print(String.Format("River Inflow: tot. {0} mm", river_inflow));
 		double pe = Math.Round(potential_evaporation);
 		Print(String.Format("PE: {0} mm ({1:.###})", pe, pe/annual_rainfall));
-		// Resource(s)
-		if (isLand)
+		if (isLand){
+			// Resource(s)
 			Print(String.Format("Resource: {0}", resource == null ? "null" : resource.name));
+			// Owner
+			Print(String.Format("Country ID: {0}", People.Country.CountryAtTile(this)));
+		}
 		// Print(String.Format("PRs: {0}", Resource.PrettyList(potential_resources)));
 		// minimap
 		DrawMinimap();
@@ -814,6 +823,18 @@ class WorldTile {
 			1 <= true_scale ? Math.Round(true_scale) + "km" : Math.Round(true_scale*1000) + "m",
 			1.609344 <= true_scale ? Math.Round(true_scale/1.609344) + "mi" : Math.Round(1000/0.3048*true_scale) + "ft"
 		);
+	}
+	// 3d distance, through ground
+	public double Distance(WorldTile other){
+		Tuple<double, double, double> xyz = Program.LatLong2Spherical(y*Math.PI, x*Math.PI);
+		double tx = xyz.Item1;
+		double ty = xyz.Item2;
+		double tz = xyz.Item3;
+		Tuple<double, double, double> oxyz = Program.LatLong2Spherical(other.y*Math.PI, other.x*Math.PI);
+		double ox = oxyz.Item1;
+		double oy = oxyz.Item2;
+		double oz = oxyz.Item3;
+		return Math.Sqrt(Math.Pow(tx-ox, 2) + Math.Pow(ty-oy, 2) + Math.Pow(tz-oz, 2));
 	}
 }
 /* todo list

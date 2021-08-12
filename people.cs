@@ -223,7 +223,7 @@ namespace People {
 				// reset
 				Reset();
 			}
-			Program.Log(String.Format("{0} naming systems loaded", namingcount), 0);
+			Program.Log(String.Format("{0} naming systems loaded", namingcount));
 		}
 	}
 	class Construct {
@@ -233,10 +233,19 @@ namespace People {
 		}
 	}
 	class Country : Construct {
-		public static readonly int maxCountries = 254;
-		static readonly List<int> randomizedCountryIdList = new byte[maxCountries].Select((_, i) => i+1).ToList();
+		public static readonly int maxCountries = 200;
+		static readonly WorldTile[] capitals = new WorldTile[maxCountries];
 		public static void Initialize(){
-			randomizedCountryIdList.SimplexShuffle(0, 0);
+			// todo: weight them so they distribute randomly on a sphere
+			// choose 200 random tiles and put countries there...
+			for (int i = 0; i < maxCountries; i++){
+				WorldTile attempt = Program.world.GetRandomTile();
+				while (0 <= attempt.owner || attempt.y < 0.1 || 0.9 < attempt.y)
+					attempt = Program.world.GetRandomTile();
+				attempt.owner = i;
+				capitals[i] = attempt;
+			}
+			Program.Log(String.Format("{0} countries placed", maxCountries));
 		}
 		readonly Culture primaryCulture;
 		Country(string name, Culture primary) : base(name){
@@ -244,20 +253,22 @@ namespace People {
 		}
 		// Simplex.Noise(x, y, r.id, 0)
 		// Program.LatLongToSpherical(lat, long) => x,y,z
-		public static byte CountryAtTile(WorldTile w){
+		/*
+			NEW PLAN
+			generate 200 random points on sphere
+			see which is closest using simple 3d distance calculation
+			create voronoi diagram
+		*/
+		public static int CountryAtTile(WorldTile w){
 			if (!w.isLand)
-				return 0;
-			double lat = w.y*Math.PI;
-			double lon = w.x*Math.PI;
-			Tuple<double, double, double> xyz = Program.LatLong2Spherical(lat, lon);
-			// v starts in [-1, 1]
-			double scale = 1;
-			// two simplex "layers", one for the first 4 bits, one for the last 4 bits, to make it less ring-y
-			double v = Simplex.OctaveNoise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 10, 3);
-			v++; // now in [0, 2]
-			v /= 2; // now in [0, 1]
-			int temp_id = (int)(v*maxCountries);
-			return (byte)(randomizedCountryIdList[Program.Mod(temp_id, maxCountries)]+1);
+				return -1;
+			if (0 <= w.owner)
+				return w.owner;
+			if (capitals[maxCountries-1] == null) // in case cursor gets placed on land BEFORE countries generate
+				return -1;
+			// find min dist
+			List<double> distances = capitals.Select(c => w.Distance(c)).ToList();
+			return distances.IndexOf(distances.Min());
 		}
 	}
 	class Culture : Construct {

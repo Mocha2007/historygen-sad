@@ -339,8 +339,8 @@ namespace Mappings {
 		}
 		static Color ColorTest(WorldTile w){
 			// outflow direction points back to inflow?
-			byte countryID = People.Country.CountryAtTile(w);
-			if (countryID == 0)
+			int countryID = People.Country.CountryAtTile(w);
+			if (countryID < 0)
 				return Color.Black;
 			return Heat((double)countryID/People.Country.maxCountries);
 			// return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Lime : Color.Red;
