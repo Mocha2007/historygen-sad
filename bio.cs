@@ -10,7 +10,7 @@ namespace Bio {
 	class Lifeform {
 		public static readonly List<Lifeform> lifeforms = new List<Lifeform>();
 		readonly AnimalName name;
-		readonly int mass; // in grams
+		public readonly int mass; // in grams
 		readonly int maturity_time; // in days???
 		readonly string[] tags;
 		public Lifeform(AnimalName s, int mass, int mat, string[] t){
@@ -145,6 +145,10 @@ namespace Bio {
 			color = col;
 			dimorphismConstant = d;
 			animals.Append(this);
+		}
+		int RandomMass(){
+			// normally distributed.
+			return (int)MochaRandom.Normal(mass, standardDeviationAsAFactorOfMass*mass);
 		}
 	}
 	class AnimalName {

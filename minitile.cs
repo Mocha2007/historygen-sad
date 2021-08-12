@@ -9,6 +9,12 @@ namespace Mini {
 		readonly WorldTile worldtile; // used to determine climate
 		public Map(WorldTile w){
 			worldtile = w;
+			Generate();
+			// todo: change view to Mini.Map!
+		}
+		void Generate(){
+			// generate "hilly" parts...
+			// generate APPROPRIATE flora
 		}
 	}
 	class Tile {
@@ -16,5 +22,16 @@ namespace Mini {
 			This is a 1m^2 "block"
 			floor, wall, furniture
 		*/
+		Block block;
+		Floor floor;
+	}
+	class Block {
+
+	}
+	class Floor {
+
+	}
+	class Building : Block {
+		// incl. furniture
 	}
 }

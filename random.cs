@@ -1,10 +1,13 @@
 // various rng tools
 static class MochaRandom {
-	static readonly System.Random r = new System.Random();
 	public static bool Bool(){
-		return r.Next(0, 2) == 0;
+		return Program.rng.Next(0, 2) == 0;
 	}
 	public static byte Byte(){
-		return (byte)r.Next();
+		return (byte)Program.rng.Next();
+	}
+	public static double Normal(double mean, double standard_deviation){
+		// we convert uniform random to a gaussion distribution via the quantile function.
+		return Program.NormalQuantile(Program.rng.NextDouble())*standard_deviation + mean;
 	}
 }
