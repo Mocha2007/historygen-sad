@@ -553,7 +553,7 @@ class WorldTile {
 	public bool isLand {
 		get { return 0 < this.elevation; }
 	}
-	double potential_evaporation { // mm/yr
+	public double potential_evaporation { // mm/yr
 		get {
 			if (temperature.Max() <= 0)
 				return 0;

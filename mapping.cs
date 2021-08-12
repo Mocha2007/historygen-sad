@@ -18,7 +18,8 @@ namespace Mappings {
 			new Tuple<string, Func<WorldTile, Color>>("Altitude", ColorAltitude),
 			new Tuple<string, Func<WorldTile, Color>>("Biome", ColorHoldridge),
 			new Tuple<string, Func<WorldTile, Color>>("Climate", ColorKoppen),
-			// new Tuple<string, Func<WorldTile, Color>>("Potential ET Ratio", ColorPETRatio),
+			new Tuple<string, Func<WorldTile, Color>>("Country", ColorCountry),
+			new Tuple<string, Func<WorldTile, Color>>("Potential ET Ratio", ColorPETRatio),
 			new Tuple<string, Func<WorldTile, Color>>("Precipitation", ColorPrecipitation),
 			new Tuple<string, Func<WorldTile, Color>>("Resource", ColorResource),
 			new Tuple<string, Func<WorldTile, Color>>("River Inflow", ColorRiver),
@@ -168,6 +169,15 @@ namespace Mappings {
 					: Program.Remap(w.elevation, WorldTile.altitude_min, -2000, -1, -0.5));
 			return Heat(Program.Remap(w.elevation, 0, WorldTile.altitude_max, 0, 1));
 		}
+		static Color ColorCountry(WorldTile w){
+			// outflow direction points back to inflow?
+			int countryID = People.Country.CountryAtTile(w);
+			if (countryID < 0)
+				return Color.Black;
+			return Heat((double)countryID/People.Country.maxCountries);
+			// return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Lime : Color.Red;
+			// return !w.isLand ? Color.Blue : Resource.silk.TileTest(w) ? Color.Lime : Color.Red;
+		}
 		static Color ColorDefault(WorldTile w){
 			// uses df-inspired legend
 			if (w.isLand){
@@ -296,29 +306,11 @@ namespace Mappings {
 				return Color.White;
 			return Heat(Program.Remap(Math.Sqrt(w.annual_rainfall), 0, Math.Sqrt(WorldTile.rainfall_max), 0, 1));
 		}
-		/*
 		static Color ColorPETRatio(WorldTile w){
-			int etc = w.holdridgeCoords.Item1;
 			if (!w.isLand)
 				return Color.White;
-			switch (etc){
-				case 3:
-					return heat[1];
-				case 2:
-					return heat[2];
-				case 1:
-					return heat[3];
-				case 0:
-					return heat[4];
-				case -1:
-					return heat[5];
-				case -2:
-					return heat[6];
-				default:
-					return heat[etc < 0 ? 7 : 0];
-			}
-				
-		}*/
+			return Heat(w.potential_evaporation/w.annual_rainfall);
+		}
 		static Color ColorResource(WorldTile w){
 			return !w.isLand ? Color.Black : w.resource == null ? Color.White : w.resource.color;
 		}
@@ -338,13 +330,7 @@ namespace Mappings {
 			return Heat(Program.Remap(t, 0, WorldTile.temperature_anomaly, 0, 1));
 		}
 		static Color ColorTest(WorldTile w){
-			// outflow direction points back to inflow?
-			int countryID = People.Country.CountryAtTile(w);
-			if (countryID < 0)
-				return Color.Black;
-			return Heat((double)countryID/People.Country.maxCountries);
-			// return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Lime : Color.Red;
-			// return !w.isLand ? Color.Blue : Resource.silk.TileTest(w) ? Color.Lime : Color.Red;
+			return !w.isLand ? Color.Blue : Color.Lime;
 		}
 	}
 }
