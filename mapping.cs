@@ -23,6 +23,7 @@ namespace Mappings {
 			new Tuple<string, Func<WorldTile, Color>>("Precipitation", ColorPrecipitation),
 			new Tuple<string, Func<WorldTile, Color>>("Resource", ColorResource),
 			new Tuple<string, Func<WorldTile, Color>>("River Inflow", ColorRiver),
+			new Tuple<string, Func<WorldTile, Color>>("Satellite", ColorSatellite),
 			new Tuple<string, Func<WorldTile, Color>>("Temperature", ColorTemperature),
 			new Tuple<string, Func<WorldTile, Color>>("Temperature Variation", ColorTemperatureVariation),
 			new Tuple<string, Func<WorldTile, Color>>("Dwarf Fortress", ColorDF),
@@ -328,6 +329,103 @@ namespace Mappings {
 				return Color.White;
 			int t = w.temperature.Max() - w.temperature.Min();
 			return Heat(Program.Remap(t, 0, WorldTile.temperature_anomaly, 0, 1));
+		}
+		static readonly Color[] blueMarbleColors = new Color[]{
+			new Color(5, 8, 23), // SEA
+			new Color(45, 53, 22), // Af
+			new Color(29, 42, 13), // Am
+			new Color(53, 58, 26), // Aw
+			new Color(114, 100, 65), // BWh
+			new Color(68, 69, 38), // BWk
+			new Color(67, 66, 34), // BSh
+			new Color(66, 67, 35), // BSk
+			new Color(56, 60, 28), // Csa
+			new Color(53, 58, 26), // Csb = Csc = Csd
+			new Color(53, 58, 26),
+			new Color(53, 58, 26),
+			new Color(55, 59, 27), // CWa = Cwb = Cwc
+			new Color(55, 59, 27),
+			new Color(55, 59, 27),
+			new Color(52, 58, 26), // Cfa = Cfb = Cfc
+			new Color(52, 58, 26),
+			new Color(52, 58, 26),
+			new Color(59, 62, 30), // Dsa
+			new Color(54, 59, 27), // Dsb
+			new Color(52, 58, 26), // Dsc
+			new Color(53, 58, 26), // Dsd
+			new Color(54, 60, 27), // Dwa
+			new Color(55, 61, 28), // Dwb
+			new Color(51, 57, 26), // Dwc
+			new Color(59, 65, 36), // Dwd
+			new Color(55, 61, 28), // Dfa
+			new Color(46, 55, 23), // Dfb
+			new Color(42, 50, 22), // Dfc
+			new Color(47, 54, 25), // Dfd
+			new Color(65, 69, 39), // ET
+			new Color(164, 167, 155), // EF
+		};
+		static readonly string[] blueMarbleClimateList = new string[]{
+			"Af",
+			"Am",
+			"Aw",
+			"BWh",
+			"BWk",
+			"BSh",
+			"BSk",
+			"Csa",
+			"Csb",
+			"Csc",
+			"Csd",
+			"Cwa",
+			"Cwb",
+			"Cwc",
+			"Cfa",
+			"Cfb",
+			"Cfc",
+			"Dsa",
+			"Dsb",
+			"Dsc",
+			"Dsd",
+			"Dwa",
+			"Dwb",
+			"Dwc",
+			"Dwd",
+			"Dfa",
+			"Dfb",
+			"Dfc",
+			"Dfd",
+			"ET",
+			"EF",
+		};
+		static Color ColorSatellite(WorldTile w){
+			// increase this if the sea is too dark
+			double sea_brightness_mul = 5;
+			if (!w.isLand){
+				Color sea = blueMarbleColors[0];
+				sea.R = (byte)(sea_brightness_mul*sea.R);
+				sea.G = (byte)(sea_brightness_mul*sea.G);
+				sea.B = (byte)(sea_brightness_mul*sea.B);
+				return sea;
+			}
+			Color color = blueMarbleColors[blueMarbleClimateList.ToList().IndexOf(w.climate)+1];
+			// okay now randomly almost-normalize the value/saturation
+			// lower this if the land is too bright
+			double max_almost_normalization = 1;
+			// max RGB
+			byte max = Math.Max(color.R, Math.Max(color.G, color.B));
+			// theoretical max increase
+			double d_max = (1-max_almost_normalization)+max_almost_normalization*(255.0/max);
+			Tuple<double, double, double> xyz = Program.LatLong2Spherical(w.y*Math.PI, w.x*Math.PI);
+			// increase this if detail not fine enough
+			double scale = 4;
+			// actual random increase
+			// increase octaves if variation too extreme or not enough detail
+			double random = (Noise.Simplex.OctaveNoise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 12, 2)+1)/2;
+			double d = 1+random*(d_max-1);
+			color.R = (byte)(color.R*d);
+			color.G = (byte)(color.G*d);
+			color.B = (byte)(color.B*d);
+			return color;
 		}
 		static Color ColorTest(WorldTile w){
 			return !w.isLand ? Color.Blue : Color.Lime;
