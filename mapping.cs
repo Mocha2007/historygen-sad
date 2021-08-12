@@ -401,7 +401,7 @@ namespace Mappings {
 			// todo antialiasing
 			// increase this if the sea is too dark
 			double sea_brightness_mul = 5;
-			if (!w.isLand){
+			if (!w.isLand && -200 <= w.temperature.Max()){
 				Color sea = blueMarbleColors[0];
 				sea.R = (byte)(sea_brightness_mul*sea.R);
 				sea.G = (byte)(sea_brightness_mul*sea.G);
