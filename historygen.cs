@@ -550,7 +550,7 @@ class WorldTile {
 		get {
 			switch ((int)slope.Item2){
 				case 24: // N
-					return RelativeTile(0,-1);
+					return RelativeTile(0, -1);
 				case 25: // S
 					return RelativeTile(0, 1);
 				case 26: // E
@@ -792,6 +792,18 @@ class WorldTile {
 	WorldTile RelativeTile(int rel_x, int rel_y){
 		Tuple<int, int> t = tile_index;
 		return Program.world.GetTileAt(t.Item1 + rel_x, t.Item2 + rel_y);
+	}
+	public WorldTile[] deltaNeighbors{
+		// get hypothetical cells JUST BARELY shifted in 4 cardinal directions...
+		get {
+			double delta = 1e-2/minimap_scale;
+			return new WorldTile[]{
+				new WorldTile(x-delta, y, RandomAltitude(x-delta, y), RandomRainfall(x-delta, y)),
+				new WorldTile(x+delta, y, RandomAltitude(x+delta, y), RandomRainfall(x+delta, y)),
+				new WorldTile(x, y-delta, RandomAltitude(x, y-delta), RandomRainfall(x, y-delta)),
+				new WorldTile(x, y+delta, RandomAltitude(x, y+delta), RandomRainfall(x, y+delta)),
+			};
+		}
 	}
 	// SELECTION TOOLTIP
 	public void Tooltip(){

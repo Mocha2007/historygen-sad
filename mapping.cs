@@ -398,6 +398,7 @@ namespace Mappings {
 			"EF",
 		};
 		static Color ColorSatellite(WorldTile w){
+			// todo antialiasing
 			// increase this if the sea is too dark
 			double sea_brightness_mul = 5;
 			if (!w.isLand){
@@ -427,8 +428,17 @@ namespace Mappings {
 			color.B = (byte)(color.B*d);
 			return color;
 		}
+		static Color ColorSatelliteAA(WorldTile w){
+			// todo antialiasing
+			Color[] neighborColors = w.deltaNeighbors.Append(w).Select(t => ColorSatellite(t)).ToArray();
+			double r = neighborColors.Average(c => c.R);
+			double g = neighborColors.Average(c => c.G);
+			double b = neighborColors.Average(c => c.B);
+			return new Color((byte)r, (byte)g, (byte)b);
+		}
 		static Color ColorTest(WorldTile w){
-			return !w.isLand ? Color.Blue : Color.Lime;
+			return ColorSatelliteAA(w);
+			// return !w.isLand ? Color.Blue : Color.Lime;
 		}
 	}
 }
