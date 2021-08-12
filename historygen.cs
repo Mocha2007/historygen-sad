@@ -20,6 +20,7 @@ class Program {
 	public static readonly byte tooltip_width = 32;
 	public static Console console;
 	public static World world;
+	public static Mini.Map game_map;
 	static readonly Tuple<string, byte>[] log_history = new Tuple<string, byte>[20];
 	static readonly int window_height = World.size + log_history.Length;
 	static readonly int window_width = World.size*2 + tooltip_width;
@@ -228,6 +229,9 @@ class World {
 	}
 	int cursor_x = size;
 	int cursor_y = size/2;
+	public WorldTile selection {
+		get { return tiles[cursor_y, cursor_x]; }
+	}
 	public WorldTile GetRandomTile(){
 		int x = Program.rng.Next(0, size);
 		int y = Program.rng.Next(0, size*2);
@@ -363,7 +367,6 @@ class World {
 		RedrawTooltip();
 	}
 	public void RedrawTooltip(){
-		WorldTile selection = tiles[cursor_y, cursor_x];
 		ClearTooltip();
 		selection.Tooltip();
 	}
@@ -776,6 +779,8 @@ class WorldTile {
 			Print(String.Format("Resource: {0}", resource == null ? "null" : resource.name));
 			// Owner
 			Print(String.Format("Country ID: {0}", People.Country.CountryAtTile(this)));
+			// Embark!
+			Print("(e) Embark!");
 		}
 		// Print(String.Format("PRs: {0}", Resource.PrettyList(potential_resources)));
 		// minimap
@@ -835,6 +840,9 @@ class WorldTile {
 		double oy = oxyz.Item2;
 		double oz = oxyz.Item3;
 		return Math.Sqrt(Math.Pow(tx-ox, 2) + Math.Pow(ty-oy, 2) + Math.Pow(tz-oz, 2));
+	}
+	public void Embark(){
+		Program.game_map = new Mini.Map(this);
 	}
 }
 /* todo list

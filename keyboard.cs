@@ -33,6 +33,10 @@ class Mokey : KeyboardConsoleComponent
 			else if (info.IsKeyPressed(Keys.OemMinus))
 				Program.world.Zoom(-1);
 			// other keys can be pressed simultaneously
+			if (info.IsKeyPressed(Keys.E)){
+				Program.world.selection.Embark();
+				Program.Log("Embarked! (Not yet implemented...)");
+			}
 			if (info.IsKeyPressed(Keys.X)){
 				Mapping.CycleChar(shift ? -1 : 1);
 				Program.world.Print();
