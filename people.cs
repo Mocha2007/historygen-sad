@@ -70,10 +70,17 @@ namespace Person {
 	class Relation {
 		// friends, family, etc...
 		readonly bool unbreakable; // eg. parent-child relations cannot be broken, but friend-friend ones can be
+		Relation(bool ub){
+			unbreakable = ub;
+		}
 	}
 	class PersonalRelation {
 		readonly Relation type;
 		readonly Person other_agent;
+		PersonalRelation(Relation r, Person other){
+			type = r;
+			other_agent = other;
+		}
 	}
 	class Sexuality {
 		readonly bool rom_f, rom_m, sex_f, sex_m, can_poly;
