@@ -81,6 +81,30 @@ namespace Mappings {
 			// red -> magenta
 			return new Color(255, 0, (int)Program.Remap(x, 0.75, 1, 0, 255));
 		}
+		/// <summary>
+		/// 0 = red (-> orange)
+		/// 1 = (magenta ->) red
+		/// </summary>
+		static Color Rainbow(double x){
+			x = Program.Clamp(x, 0, 1);
+			// r -> y
+			if (x < 1/6.0)
+				return new Color(255, (byte)(6*x*255), 0);
+			// y -> g
+			if (x < 1/3.0)
+				return new Color((byte)(6*(0.5-x)*255), 255, 0);
+			// g -> c
+			if (x < 0.5)
+				return new Color(0, 255, (byte)(6*(x-0.5)*255));
+			// c -> b
+			if (x < 2/3.0)
+				return new Color(0, (byte)(6*(2/3.0-x)*255), 255);
+			// b -> m
+			if (x < 5/6.0)
+				return new Color((byte)(6*(x-5/6.0)*255), 0, 255);
+			// m -> r
+			return new Color(255, 0, (byte)(6*(1-x)*255));
+		}
 		// char selectors
 		static int CharAltitude(WorldTile w){
 			// uses df-inspired legend
@@ -175,7 +199,7 @@ namespace Mappings {
 			int countryID = People.Country.CountryAtTile(w);
 			if (countryID < 0)
 				return Color.Black;
-			return Heat((double)countryID/People.Country.maxCountries);
+			return Rainbow((double)countryID/People.Country.maxCountries);
 			// return !w.isLand ? Color.Blue : Resource.resources.Any(r => r.TileTest(w)) ? Color.Lime : Color.Red;
 			// return !w.isLand ? Color.Blue : Resource.silk.TileTest(w) ? Color.Lime : Color.Red;
 		}
