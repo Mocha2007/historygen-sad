@@ -397,7 +397,7 @@ namespace Mappings {
 			"ET",
 			"EF",
 		};
-		static Color ColorSatellite(WorldTile w){
+		public static Color ColorSatellite(WorldTile w){
 			// todo antialiasing
 			// increase this if the sea is too dark
 			double sea_brightness_mul = 5;

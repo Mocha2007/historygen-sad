@@ -37,6 +37,9 @@ class Mokey : KeyboardConsoleComponent
 				Program.world.selection.Embark();
 				Program.Log("Embarked! (Not yet implemented...)");
 			}
+			if (info.IsKeyPressed(Keys.S)){ // save map
+				new Task(() => {Export.Celestia.ExportBitmap();}).Start();
+			}
 			if (info.IsKeyPressed(Keys.X)){
 				Mapping.CycleChar(shift ? -1 : 1);
 				Program.world.Print();

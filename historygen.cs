@@ -116,6 +116,15 @@ class Program {
 		}
 		console.Print(7, y, message, Color.Silver, Color.Black);
 	}
+	public static void LogProgress(int current, int max){
+		int y = window_height-1;
+		// empty
+		console.Fill(new Rectangle(current, y, max-current, 1), Color.Green, Color.Green, 0, 0);
+		// filled
+		console.Fill(new Rectangle(0, y, current, 1), Color.Lime, Color.Lime, 0, 0);
+		// progress text
+		console.Print(max, y, String.Format("{0}%", 100*current/max), Color.Silver, Color.Black);
+	}
 	public static void Log(object message){
 		Log(message, 0);
 	}
