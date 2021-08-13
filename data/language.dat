@@ -20,3 +20,11 @@ naming
 	nofemalesurname true
 	patrynomic {0}sunuz
 end
+naming
+	name eremoran
+	male  rdomor arr“r bazˆlakur bˆbˆtur ebbazˆr ‚pemor ker l“tor lusikopˆr par“nar temˆr
+	female ‚asur ebbaz“r esur hafaela haffela kutoker lusikop“r mankar m nikar napaker netar pamor par“kar saiur sioker tem“r
+	neuter  dramor i£r
+	twogivennames true
+	patrynomic {0}isur (imperfect, but...)
+end
