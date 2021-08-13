@@ -3,6 +3,7 @@ naming
 	male albert alfred arthur gilbert joseph john paul theodore william
 	female elizabeth jane marion mary
 	family baker cook cooper fryer grey miller
+	twogivennames true
 end
 naming
 	name latin

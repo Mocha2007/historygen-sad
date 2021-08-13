@@ -189,12 +189,16 @@ namespace People {
 			string[] female = new string[0];
 			string[] neuter = new string[0];
 			string[] family = new string[0];
+			bool usesTwoGivenNames = false;
+			bool givenNamesFirst = true;
 			Action Reset = () => {
 				name = "";
 				male = new string[0];
 				female = new string[0];
 				neuter = new string[0];
 				family = new string[0];
+				usesTwoGivenNames = false;
+				givenNamesFirst = true;
 			};
 			int namingcount = 0;
 			foreach (string line in raw){
@@ -216,6 +220,12 @@ namespace People {
 					case "family":
 						family = split.Skip(1).ToArray();
 						continue;
+					case "twogivennames":
+						usesTwoGivenNames = bool.Parse(split[1]);
+						continue;
+					case "givennamesfirst":
+						givenNamesFirst = bool.Parse(split[1]);
+						continue;
 					case "end":
 						break; // handled below
 					default: // just a comment!
@@ -223,7 +233,7 @@ namespace People {
 				}
 				// handle end
 				if (type == "naming"){
-					new NamingSystem(name, male, female, neuter, family);
+					new NamingSystem(name, male, female, neuter, family, usesTwoGivenNames, givenNamesFirst);
 					namingcount++;
 				}
 				else
@@ -298,19 +308,29 @@ namespace People {
 			-family name/given name order
 		*/
 		readonly string[] familyNameBank, maleGivenNameBank, femaleGivenNameBank, neuterGivenNameBank;
-		public NamingSystem(string name, string[] given_m, string[] given_f, string[] given_n, string[] family) : base(name){
+		readonly bool usesTwoGivenNames, givenNamesFirst;
+		public NamingSystem(string name, string[] given_m, string[] given_f, string[] given_n, string[] family,
+				bool usesTwoGivenNames, bool givenNamesFirst) : base(name){
 			maleGivenNameBank = given_m;
 			femaleGivenNameBank = given_f;
 			neuterGivenNameBank = given_n;
 			familyNameBank = family;
+			this.usesTwoGivenNames = usesTwoGivenNames;
+			this.givenNamesFirst = givenNamesFirst;
 			systems.Add(this);
 		}
 		public string RandomFromGender(bool is_male){
+			int fi = Program.rng.Next(0, familyNameBank.Length);
+			string givens = RandomGivenFromGender(is_male);
+			if (usesTwoGivenNames)
+				givens += " " + RandomGivenFromGender(is_male);
+			return String.Format(givenNamesFirst ? "{0} {1}" : "{1} {0}", givens, familyNameBank[fi]);
+		}
+		string RandomGivenFromGender(bool is_male){
 			string[] names = neuterGivenNameBank
 				.Concat(is_male ? maleGivenNameBank : femaleGivenNameBank).ToArray();
 			int gi = Program.rng.Next(0, names.Length);
-			int fi = Program.rng.Next(0, familyNameBank.Length);
-			return String.Format("{0} {1}", familyNameBank[fi], names[gi]);
+			return names[gi];
 		}
 	}
 	class Religion : Construct {
