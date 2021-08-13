@@ -35,7 +35,7 @@ namespace Mini {
 						name = split[1];
 						continue;
 					case "color":
-						color = new Color(uint.Parse(split[1], System.Globalization.NumberStyles.HexNumber));
+						color = Program.ColorFromHex(split[1]);
 						continue;
 					case "density":
 						density = ushort.Parse(split[1]);

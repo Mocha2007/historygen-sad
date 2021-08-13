@@ -258,6 +258,19 @@ class Program {
 			return (Color)prop.GetValue(null, null);
 		return default(Color);
 	}
+	public static Color ColorFromHex(string s){
+		s = s.Replace("#", "");
+		uint i = uint.Parse(s, System.Globalization.NumberStyles.HexNumber);
+		// You might think you're clever, and that you can simply reverse the bytes. WRONG! hex codes are ARGB but Color takes ABGR.
+		byte[] bytes = BitConverter.GetBytes(i);
+		byte b = bytes[0];
+		byte g = bytes[1];
+		byte r = bytes[2];
+		byte a = bytes[3];
+		string s_ = BitConverter.ToUInt32(bytes.Reverse().ToArray()).ToString("X");
+		Color c = new Color(r, g, b, a);
+		return c;
+	}
 }
 class World {
 	public static readonly byte size = 64;

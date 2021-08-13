@@ -80,7 +80,7 @@ namespace Bio {
 						parts = split.Skip(1).Select(s => BodyPart.FromName(s)).ToArray();
 						continue;
 					case "icon":
-						color = new Color(uint.Parse(split[1], System.Globalization.NumberStyles.HexNumber));
+						color = Program.ColorFromHex(split[1]);
 						c = split[2][0];
 						continue;
 					case "mass":
