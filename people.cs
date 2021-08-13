@@ -194,7 +194,7 @@ namespace People {
 			bool usesTwoGivenNames = false;
 			bool givenNamesFirst = true;
 			bool nofemalesurname = false;
-			string patrynomic = "";
+			string patronymic = "";
 			Action Reset = () => {
 				name = "";
 				male = new string[0];
@@ -204,7 +204,7 @@ namespace People {
 				usesTwoGivenNames = false;
 				givenNamesFirst = true;
 				nofemalesurname = false;
-				patrynomic = "";
+				patronymic = "";
 			};
 			int namingcount = 0;
 			foreach (string line in raw){
@@ -235,8 +235,8 @@ namespace People {
 					case "nofemalesurname":
 						nofemalesurname = bool.Parse(split[1]);
 						continue;
-					case "patrynomic":
-						patrynomic = split[1];
+					case "patronymic":
+						patronymic = split[1];
 						continue;
 					case "end":
 						break; // handled below
@@ -246,7 +246,7 @@ namespace People {
 				// handle end
 				if (type == "naming"){
 					new NamingSystem(name, male, female, neuter, family,
-						usesTwoGivenNames, givenNamesFirst, nofemalesurname, patrynomic);
+						usesTwoGivenNames, givenNamesFirst, nofemalesurname, patronymic);
 					namingcount++;
 				}
 				else
@@ -316,19 +316,19 @@ namespace People {
 	class NamingSystem : Construct {
 		public static readonly List<NamingSystem> systems = new List<NamingSystem>();
 		/* todo list
-			-patrynomic/matrynomic
+			-patronymic/matrynomic
 			-marriage name/maiden name
 			-family name/given name order
 		*/
 		readonly string[] familyNameBank, maleGivenNameBank, femaleGivenNameBank, neuterGivenNameBank;
 		readonly bool usesTwoGivenNames, givenNamesFirst, nofemalesurname;
-		readonly string patrynomic; // suffix; blank = no patrynomics
+		readonly string patronymic; // suffix; blank = no patronymics
 		// eg. Mac{0}, or {0}son
-		bool usesPatrynomic {
-			get { return 0 < patrynomic.Length; }
+		bool usesPatronymic {
+			get { return 0 < patronymic.Length; }
 		}
 		public NamingSystem(string name, string[] given_m, string[] given_f, string[] given_n, string[] family,
-				bool usesTwoGivenNames, bool givenNamesFirst, bool nofemalesurname, string patrynomic) : base(name){
+				bool usesTwoGivenNames, bool givenNamesFirst, bool nofemalesurname, string patronymic) : base(name){
 			maleGivenNameBank = given_m;
 			femaleGivenNameBank = given_f;
 			neuterGivenNameBank = given_n;
@@ -336,13 +336,13 @@ namespace People {
 			this.usesTwoGivenNames = usesTwoGivenNames;
 			this.givenNamesFirst = givenNamesFirst;
 			this.nofemalesurname = nofemalesurname;
-			this.patrynomic = patrynomic;
+			this.patronymic = patronymic;
 			systems.Add(this);
 		}
 		public string RandomFromGender(bool is_male){
 			string family;
-			if (usesPatrynomic)
-				family = String.Format(patrynomic, RandomGivenFromGender(true));
+			if (usesPatronymic)
+				family = String.Format(patronymic, RandomGivenFromGender(true));
 			else {
 				int fi = Program.rng.Next(0, familyNameBank.Length);
 				family = familyNameBank[fi];

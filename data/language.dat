@@ -18,7 +18,7 @@ naming
 	male agilaz agithewaz alar¡ks albigaizaz albiharjaz andaswaraz ansulaibaz ansuwaldaz audar¡ks audawakraz audawarduz audawiniz audawulfaz auziwandilaz athalagaizaz athalawulfaz balthawiniz bernuharduz frithugaizaz frithur¡ks fr¢d“ gaizar¡ks gr¡maz gunthiharjaz gunthilaibaz gunthiwulfaz haimar¡ks harjam¢daz harjawaldaz helpar¡ks hildir¡ks hr¢thiberhtaz hr¢thigaizaz hr¢thir¡ks hr¢thiwulfaz ingum‚raz kunjamunduz raginaharduz raginaharjaz raginawaldaz r‚dawulfaz r¡kaharduz segafrithuz sigiwarduz stainawarjaz uzdagaizaz uzdawulfaz waldaharjaz wiljahelmaz theudar¡ks theud¢balthaz theud¢berhtaz
 	female brunj¢hildiz ermunahildiz gudageb¢ mahtihildiz
 	nofemalesurname true
-	patrynomic {0}sunuz
+	patronymic {0}sunuz
 end
 naming
 	name eremoran
@@ -26,10 +26,10 @@ naming
 	female ‚asur ebbaz“r esur hafaela haffela kutoker lusikop“r mankar m nikar napaker netar pamor par“kar saiur sioker tem“r
 	neuter  dramor i£r
 	twogivennames true
-	patrynomic {0}isur (imperfect, but...)
+	patronymic {0}isur (imperfect, but...)
 end
 naming
 	name robot
 	neuter beep bit bleep bloop boop bot byte
-	patrynomic {0}
+	patronymic {0}
 end
