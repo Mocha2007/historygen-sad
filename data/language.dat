@@ -28,3 +28,8 @@ naming
 	twogivennames true
 	patrynomic {0}isur (imperfect, but...)
 end
+naming
+	name robot
+	neuter beep bit bleep bloop boop bot byte
+	patrynomic {0}
+end
