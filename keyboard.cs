@@ -38,7 +38,9 @@ class Mokey : KeyboardConsoleComponent
 				Program.Log("Embarked! (Not yet implemented...)");
 			}
 			if (info.IsKeyPressed(Keys.R)) // debug
-				Program.Log(People.NamingSystem.systems[2].RandomFromGender(true));
+				Program.Log(People.NamingSystem.systems
+					[Program.rng.Next(0, People.NamingSystem.systems.Count)]
+					.RandomFromGender(MochaRandom.Bool()));
 			if (info.IsKeyPressed(Keys.S)) // save map
 				new Task(() => {Export.Celestia.ExportBitmap();}).Start();
 			if (info.IsKeyPressed(Keys.X)){
