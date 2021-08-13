@@ -28,8 +28,17 @@ naming
 	twogivennames true
 	patronymic {0}isur (imperfect, but...)
 end
+#naming
+#	name robot
+#	neuter beep bit bleep bloop boop bot byte
+#	patronymic {0}
+#end
 naming
-	name robot
-	neuter beep bit bleep bloop boop bot byte
-	patronymic {0}
+	name verdurian
+	http://www.zompist.com/names.htm
+	In order to account for the issue with patronymics, I can only include male names ending with consonants.
+	male albes aldan alef r alric alsar an rion ancor andorot andul andlon and”rn andorom banelut banes bansort banvuran belgef r belges belgol¢n bel”rn belzon bendaz¢n bendom bendrot beselut besfant budrot buloneon burzon caleon calod‰n calones calozer claizon comelut comnes coreon cornes c”rpon dambes d‰nes domef r draceon dracoum draczol ‚secom esfalban esfalnan esfant estdorot ezdom ezgareon elenes eleom eligliny eliric elubes elucom eluc”r elul¢n eluvuran erdan ereon ernes estadul estanes falbes faledom fatandor fandul fr‚dan fr‚drot garc”r gardom genc”r gen‚h gendan geric g‰sar gesfant gesom gesric gesvuran glavric glinelir gr”sefar humbes humef r ilis”r in‰bes in‰c”r in‰s”r kaidan kaidorot kaifar kairuz¢n kaivuran kolves kolc”r kolhum letidan letis”r letizon licor liteon londrot lonef r lons”r meicom meleon m‚licom m‰rozol murdorot murgen nanes nanef r nounes nozon nusc”r nuseon ohdorot os”r obadrot opric ops”r onhum ”rmban ”rnric ”rnum palc”r paleon p‚dom p‚drot p‚sar ponc”r pones ponumeon ponvuran rivuran sarbes sarnes sarric seadul s”rdom s”rdul s”ric sulbes sulef r taidan taic”r taipon taivuran telnes teleon telric tigar tihum tilir tulim‰r vuraneon zerban zerdorot zerban zerdorot zoldrac zolfant zolges zolvuran zombur zuldom zuls”r zulzon abend antavon beluan benec brac bundrul caiem caloton capir cepelil comblon elil getemil gur‰om h¡rumor ic‰lan idurul k¡rumor maranh m‰f m‰ranac m‰ril obad orest oruseon parnom peil pelerun p‰r pondril ren r sokol s”r syetnor valur verat vereon virny vlaran yanul zol az‰n r bar beret bizbirah ‚res iriam olon teron‚l urez vyon zid „ron avr„m clemet corn‚l eman‚l gaml‰l gavr‰l iason iosif is„c luc mihel pavel savel simon solom sost‚n tuhon venam¡n zahar
+	female albenda alita alsara al‚sia anelure anfrea andozula belzona bendasea burcuma caleona calom‰ra calonesa claili claim‰ra claisea claizula concai comeli comleti corvana c”rinye d‰nesa dorobenda domleti es‚coma esfr‚a estuli elenesa elesea elticai elireti eliglini eluc”ra elusea elutia elulira eluresta elurenesa elurinye elusea estanesa falsasna fandula filisea forisea frec”ra frem‰ra garbenda gescai gr”seleti ilcorea ilicoma ilim‰ra ilisea inyelura in‰m‚li in‰s”ra kailona kaimeli koleva leticai leticora letisea lim‰ra lircai loncai mecai melicai mel¡coma melinye melleti mem‰ra m‰racai m‰rili murtai nounesa opfori ops”ra ombenda om‰ra palc”ra palfrea p‚cai pecuma rim‰ra sarcai selona sum‰ra tasea teltuli ticai tiliri tuliti zolcai zolm‰ra zonglini zonleti zulc”ra zuls”ra zulzona ailura beluana beneca bosa brura buheda capiye curul‰ elila estre fidra frea guduna gur‰ ic‰lana idurula imiri istibri koleva lav¡sia lelesa letusca m‚lnite mudra‰ munifa naunai n”lne obada of¢riza onoale oresta pizuf‰a ravi sasna sezu‰ silui silva sul‚a susluoma timely ts¡sia valura vena v‰si vlarana vler‰ vler‰i yacura alana al ud‰ alue ambeca ambrise besoma brinuma cam‚lia colibe dizama ecune epete eteya eti etin‰ fuli icadita iori laleda lare lerete leritene l£vore murere niore n¢e olesama petinuma ridilenda sarena siysa suraliha teroneli tisati urisama yoreta z‚lia z‰ne agne alekia ana andrea an‰la at¢nia cecia coma elena elia elisave emia eva evnica fer‚nica fove harma hloe ihana iri iulia kurya loi luca margite maria martina m‚lan‰ miheli natalia p‰si petra raheli reveca sara sofia suntua susana ter sia trufena varvara vas‰a v‰nica verena yuliana zahara
+	neuter lones
+	patronymic {0}ei (imperfect, but...)
 end

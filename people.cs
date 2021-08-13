@@ -214,6 +214,9 @@ namespace People {
 					case "naming":
 						type = kw;
 						continue;
+					case "name":
+						name = split[1];
+						continue;
 					case "male":
 						male = split.Skip(1).ToArray();
 						continue;
