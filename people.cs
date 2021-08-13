@@ -23,8 +23,9 @@ namespace Person {
 			sexuality = s;
 		}
 		public static Person Random(){
-			return new Person(People.NamingSystem.systems[0].Random(),
-				MochaRandom.Bool(), Personality.Random(), Sexuality.Random());
+			bool gender = MochaRandom.Bool();
+			return new Person(People.NamingSystem.systems[0].RandomFromGender(gender),
+				gender, Personality.Random(), Sexuality.Random());
 		}
 	}
 	// subtypes
@@ -184,11 +185,15 @@ namespace People {
 			string type = "";
 			// MAKE SURE TO COPY THESE TO RESET
 			string name = "";
-			string[] given = new string[0];
+			string[] male = new string[0];
+			string[] female = new string[0];
+			string[] neuter = new string[0];
 			string[] family = new string[0];
 			Action Reset = () => {
 				name = "";
-				given = new string[0];
+				male = new string[0];
+				female = new string[0];
+				neuter = new string[0];
 				family = new string[0];
 			};
 			int namingcount = 0;
@@ -199,14 +204,17 @@ namespace People {
 					case "naming":
 						type = kw;
 						continue;
-					case "name":
-						name = split[1];
+					case "male":
+						male = split.Skip(1).ToArray();
 						continue;
-					case "given":
-						given = split.Skip(1).ToArray();
+					case "female":
+						female = split.Skip(1).ToArray();
+						continue;
+					case "neuter":
+						neuter = split.Skip(1).ToArray();
 						continue;
 					case "family":
-						given = split.Skip(1).ToArray();
+						family = split.Skip(1).ToArray();
 						continue;
 					case "end":
 						break; // handled below
@@ -215,7 +223,7 @@ namespace People {
 				}
 				// handle end
 				if (type == "naming"){
-					new NamingSystem(name, given, family);
+					new NamingSystem(name, male, female, neuter, family);
 					namingcount++;
 				}
 				else
@@ -289,16 +297,20 @@ namespace People {
 			-marriage name/maiden name
 			-family name/given name order
 		*/
-		readonly string[] familyNameBank, givenNameBank;
-		public NamingSystem(string name, string[] given, string[] family) : base(name){
-			givenNameBank = given;
+		readonly string[] familyNameBank, maleGivenNameBank, femaleGivenNameBank, neuterGivenNameBank;
+		public NamingSystem(string name, string[] given_m, string[] given_f, string[] given_n, string[] family) : base(name){
+			maleGivenNameBank = given_m;
+			femaleGivenNameBank = given_f;
+			neuterGivenNameBank = given_n;
 			familyNameBank = family;
 			systems.Add(this);
 		}
-		public string Random(){
+		public string RandomFromGender(bool is_male){
+			string[] names = neuterGivenNameBank
+				.Concat(is_male ? maleGivenNameBank : femaleGivenNameBank).ToArray();
+			int gi = Program.rng.Next(0, names.Length);
 			int fi = Program.rng.Next(0, familyNameBank.Length);
-			int gi = Program.rng.Next(0, givenNameBank.Length);
-			return String.Format("{0} {1}", familyNameBank[fi], givenNameBank[gi]);
+			return String.Format("{0} {1}", familyNameBank[fi], names[gi]);
 		}
 	}
 	class Religion : Construct {
