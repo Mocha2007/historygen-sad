@@ -55,6 +55,7 @@ class Program {
 	}
 	static void InitializeConsole(){
 		console = new Console(window_width, window_height);
+		SadConsole.Game.Instance.Window.Title = "Mocha's HistoryGen";
 		console.IsFocused = true;
 		console.Components.Add(new Mokey());
 		Log("Awakening the dusklings...");
