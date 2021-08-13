@@ -387,6 +387,7 @@ class World {
 			return false;
 		}
 		// must have one of every resource
+		/*
 		bool[] resourceAvailability = new bool[Resource.resources.Count];
 		foreach (WorldTile wt in w){
 			if (!wt.isLand)
@@ -403,6 +404,7 @@ class World {
 			));
 			return false;
 		}
+		*/
 		// otherwise, fine
 		return true;
 	}
