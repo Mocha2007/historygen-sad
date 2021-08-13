@@ -28,6 +28,12 @@ class Program {
 		// Person.Person p = Person.Person.Random();
 		// clear log
 		File.WriteAllText("log.txt", "");
+		// seed arg
+		if (args.Contains("-s"))
+			seed = int.Parse(args[args.ToList().IndexOf("-s")+1]);
+		else
+			seed = (int)DateTime.Now.Ticks;
+		NewSeed(false);
 		// sadconsole stuff
 		Game.Create("fonts/moki_square.font", window_width, window_height);
 		Game.Instance.Window.Title = "Mocha's History Generator";
@@ -41,11 +47,6 @@ class Program {
 				Mapping.CycleChar(int.Parse(args[args.ToList().IndexOf("-char")+1]));
 			if (args.Contains("-color"))
 				Mapping.CycleColor(int.Parse(args[args.ToList().IndexOf("-color")+1]));
-		}
-		// seed arg
-		if (args.Contains("-s")){
-			seed = int.Parse(args[args.ToList().IndexOf("-s")+1]);
-			NewSeed(false);
 		}
 		// Test();
 		// Histogram(pac_data);
@@ -62,8 +63,6 @@ class Program {
 		Global.CurrentScreen = console;
 		new Task(() => { // do async so the window immediately shows up
 			// compute altitude cutoff
-			seed = (int)DateTime.Now.Ticks;
-			rng = new Random(seed);
 			List<double> pac_data = Simplex.Test().Select(x => Math.Pow(x, WorldTile.altitude_exponent)).ToList();
 			precomputed_altitude_cutoff = Percentile(pac_data, WorldTile.desiredSeaFraction);
 			// gen world
@@ -933,7 +932,6 @@ class WorldTile {
 - maybe use
 	https://stackoverflow.com/a/4190969/2579798
 		for worldgen...?
-- PAC tweaks in worldgen can create non-deterministic worlds. This should be fixed.
 - no lakes form from local minima, gotta add that
 - actually work on the history generator part of the history generator
 */
