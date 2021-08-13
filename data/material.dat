@@ -1,8 +1,36 @@
 material
 	name stone
 	color 808080
+	density 1600
 end
 material
 	name wood
 	color 804000
+	density 600
 end
+material
+	name coal
+	color 202020
+	density 1350 (Anthracite)
+end
+material
+	name copper
+	color c06000
+	density 8960
+end
+material
+	name gem (modelled on amethyst)
+	color 800080
+	density 2650
+end
+material
+	name gold
+	color ffc000
+	density 19300
+end
+material
+	name iron
+	color 404040
+	density 7874
+end
+todo: ivory marble rubber salt silver sulfur

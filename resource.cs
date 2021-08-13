@@ -65,6 +65,7 @@ namespace Resources {
 		}
 		// NON-STATIC METHODS
 		// list of resources
+		// todo put these in resource.dat
 		static readonly Resource cinnamon = new Resource("cinnamon",
 			w => {
 				Tuple<int, int> h = w.holdridgeCoords;

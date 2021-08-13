@@ -17,9 +17,11 @@ namespace Mini {
 			// MAKE SURE TO COPY THESE TO RESET
 			string name = "";
 			Color color = Color.Black;
+			ushort density = 1000;
 			Action Reset = () => {
 				name = "";
 				color = Color.Black;
+				density = 1000;
 			};
 			int materials = 0;
 			foreach (string line in raw){
@@ -33,7 +35,10 @@ namespace Mini {
 						name = split[1];
 						continue;
 					case "color":
-						color = new Color(uint.Parse(split[1]));
+						color = new Color(uint.Parse(split[1], System.Globalization.NumberStyles.HexNumber));
+						continue;
+					case "density":
+						density = ushort.Parse(split[1]);
 						continue;
 					case "end":
 						break; // handled below
@@ -42,7 +47,7 @@ namespace Mini {
 				}
 				// handle end
 				if (type == "material"){
-					new Material(name, color);
+					new Material(name, color, density);
 					materials++;
 				}
 				else
@@ -90,9 +95,13 @@ namespace Mini {
 		readonly Floor floor;
 		readonly string name;
 		public readonly Color color;
-		public Material (string name, Color color){
+		readonly ushort density; // kg/m^3
+		// readonly short melt, boil; // "degrees centicelsius", ie. C*100
+		// todo: standardize temperature (make a class for it?) across ALL files
+		public Material (string name, Color color, ushort density){
 			this.name = name;
 			this.color = color;
+			this.density = density;
 			// create block and floor
 			block = new Block(this);
 			floor = new Floor(this);
