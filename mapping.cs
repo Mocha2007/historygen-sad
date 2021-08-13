@@ -425,7 +425,7 @@ namespace Mappings {
 		public static Color ColorSatellite(WorldTile w){
 			// todo antialiasing
 			// increase this if the sea is too dark
-			double sea_brightness_mul = 5;
+			double sea_brightness_mul = 3;
 			if (!w.isLand && -200 <= w.temperature.Max()){
 				Color sea = blueMarbleColors[0];
 				sea.R = (byte)(sea_brightness_mul*sea.R);
@@ -445,7 +445,7 @@ namespace Mappings {
 			}
 			// okay now randomly almost-normalize the value/saturation
 			// lower this if the land is too bright
-			double max_almost_normalization = 0.6;
+			double max_almost_normalization = 0.4;
 			// max RGB
 			byte max = Math.Max(color.R, Math.Max(color.G, color.B));
 			// theoretical max increase
