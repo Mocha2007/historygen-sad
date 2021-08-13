@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Resources;
-using Noise;
 
 namespace Person {
 	class Person {

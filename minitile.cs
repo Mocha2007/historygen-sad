@@ -1,3 +1,5 @@
+// color
+using Microsoft.Xna.Framework;
 namespace Mini {
 	class Map {
 		/*
@@ -26,12 +28,15 @@ namespace Mini {
 		Floor floor;
 	}
 	class Block {
-
+		readonly Color fore, back;
+		readonly char c;
 	}
 	class Floor {
-
+		readonly Color fore, back;
+		readonly char c;
 	}
 	class Building : Block {
 		// incl. furniture
+		readonly byte size;
 	}
 }
