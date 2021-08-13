@@ -274,7 +274,7 @@ class Program {
 }
 class World {
 	public static readonly byte size = 64;
-	static readonly float seaFraction_tolerance = 0.1F;
+	static readonly float seaFraction_tolerance = 0.15F;
 	static readonly short min_highest_peak_altitude = 5000;
 	readonly WorldTile[,] tiles;
 	/// <summary>
@@ -361,6 +361,19 @@ class World {
 	}
 	static bool Valid(ref WorldTile[,] w){
 		// return true;
+		// peaks should check first because it could break early
+		// check highest peak
+		short highest_peak_altitude = 0;
+		foreach (WorldTile wt in w){
+			highest_peak_altitude = highest_peak_altitude < wt.elevation ?
+				wt.elevation : highest_peak_altitude;
+			if (min_highest_peak_altitude < wt.elevation)
+				break;
+		}
+		if (highest_peak_altitude < min_highest_peak_altitude){
+			Program.Log(String.Format("bad peak altitude: {0} < {1}", highest_peak_altitude, min_highest_peak_altitude));
+			return false;
+		}
 		// check sea tile fraction
 		int seaTileCount = 0;
 		foreach (WorldTile wt in w)
@@ -379,32 +392,20 @@ class World {
 			Program.precomputed_altitude_cutoff -= 0.01; // attempt corrective measures
 			return false;
 		}
-		// check highest peak
-		short highest_peak_altitude = 0;
-		foreach (WorldTile wt in w){
-			highest_peak_altitude = highest_peak_altitude < wt.elevation ?
-				wt.elevation : highest_peak_altitude;
-			if (min_highest_peak_altitude < wt.elevation)
-				break;
-		}
-		if (highest_peak_altitude < min_highest_peak_altitude){
-			Program.Log(String.Format("bad peak altitude: {0} < {1}", highest_peak_altitude, min_highest_peak_altitude));
-			return false;
-		}
 		// must have one of every resource
-		Dictionary<Resource, bool> resource_count = new Dictionary<Resource, bool>();
+		bool[] resourceAvailability = new bool[Resource.resources.Count];
 		foreach (WorldTile wt in w){
-			if (!wt.isLand || wt.resource == null)
+			if (!wt.isLand)
 				continue;
-			if (!resource_count.ContainsKey(wt.resource))
-				resource_count[wt.resource] = true;
-			if (resource_count.Keys.Count == Resource.resources.Count)
+			foreach(Resource r in wt.potential_resources)
+				resourceAvailability[r.id] = true;
+			if (resourceAvailability.All(b => b))
 				break;
 		}
-		if (resource_count.Keys.Count < Resource.resources.Count){
-			int missing = Resource.resources.Count-resource_count.Keys.Count;
+		if (!resourceAvailability.All(b => b)){
+			int missing = Resource.resources.Count-resourceAvailability.Count(b => b);
 			Program.Log(String.Format("missing {0} resource{1}: {2}", missing, missing == 1 ? "" : "s",
-				String.Join(", ", Resource.resources.Where(r => !resource_count.Keys.Contains(r)).Select(r => r.name))
+				String.Join(", ", Resource.resources.Where(r => !resourceAvailability[r.id]).Select(r => r.name))
 			));
 			return false;
 		}
@@ -480,7 +481,7 @@ class WorldTile {
 	public int river_inflow; // how many mm anually get converted into streams and rivers
 	readonly short[] rainfall;
 	public readonly short[] temperature;
-	public static readonly float desiredSeaFraction = 0.45F; // 0.4 is about perfect; must be in (0, 0.92]
+	public static readonly float desiredSeaFraction = 0.5F; // 0.4 is about perfect; must be in (0, 0.92]
 	public static readonly short mountain_altitude = 3000; // for rain shadows
 	// alt
 	public static readonly double altitude_exponent = 1.2; // in my experience, has the lowest failure rate
@@ -717,15 +718,6 @@ class WorldTile {
 		}
 	}
 	// static methods
-	static double RandomUnadjustedAltitude(double x, double y){
-		double lat = y*Math.PI;
-		double lon = x*Math.PI;
-		Tuple<double, double, double> xyz = Program.LatLong2Spherical(lat, lon);
-		x = xyz.Item1*altitude_scale;
-		y = xyz.Item2*altitude_scale;
-		double z = xyz.Item3*altitude_scale;
-		return Math.Pow(Simplex.OctaveNoise(x, y, z, 0, octaves), altitude_exponent);
-	}
 	static short[] RandomRainfall(double x, double y){
 		double lat = y*Math.PI;
 		double lon = x*Math.PI;
@@ -762,6 +754,15 @@ class WorldTile {
 				xyz.Item3*temperature_scale_geographic,
 				tx*ty*temperature_scale_seasonal,
 				octaves));
+	}
+	static double RandomUnadjustedAltitude(double x, double y){
+		double lat = y*Math.PI;
+		double lon = x*Math.PI;
+		Tuple<double, double, double> xyz = Program.LatLong2Spherical(lat, lon);
+		x = xyz.Item1*altitude_scale;
+		y = xyz.Item2*altitude_scale;
+		double z = xyz.Item3*altitude_scale;
+		return Math.Pow(Simplex.OctaveNoise(x, y, z, 0, octaves), altitude_exponent);
 	}
 	static short RandomAltitude(double x, double y){
 		// altitude
