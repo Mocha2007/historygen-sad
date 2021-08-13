@@ -1,0 +1,8 @@
+material
+	name stone
+	color 808080
+end
+material
+	name wood
+	color 804000
+end

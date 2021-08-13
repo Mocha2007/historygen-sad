@@ -72,6 +72,7 @@ class Program {
 			Log(String.Format("worldgen took {0} ms", (t_end - t_start)/10000));
 			// plants and critters
 			world.Print();
+			Mini.Core.ParseData();
 			Bio.Lifeform.ParseData();
 			People.Core.ParseData();
 			People.Country.Initialize();
