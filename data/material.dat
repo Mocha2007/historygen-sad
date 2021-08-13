@@ -1,4 +1,9 @@
 material
+	name dirt
+	color a05000
+	density 1250
+end
+material
 	name stone
 	color 808080
 	density 1600

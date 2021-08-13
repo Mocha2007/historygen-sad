@@ -75,6 +75,18 @@ namespace Mini {
 		void Generate(){
 			// generate "hilly" parts...
 			// generate APPROPRIATE flora
+			// for now just generate a dirt floor and nothing else...
+			Material dirt = Material.FromString("dirt");
+			int percent = 1;
+			for (int x = 0; x < mapsize; x++){
+				for (int y = 0; y < mapsize; y++)
+					tiles[x, y] = new Tile(null, dirt.floor);
+				if (percent*100.0 <= (double)x/mapsize){
+					Program.LogProgress(percent, 100);
+					percent++;
+				}
+			}
+			Program.Log("Generated MiniMap");
 		}
 	}
 	class Tile {
@@ -87,12 +99,16 @@ namespace Mini {
 		Tuple<char, Color, Color> charForeBack {
 			get { return block == null ? floor.charForeBack : block.charForeBack; }
 		}
+		public Tile(Block b, Floor f){
+			this.block = b;
+			this.floor = f;
+		}
 	}
 	class Material {
 		// each material has a block and floor form. each block/floor has a material.
 		static readonly List<Material> materials = new List<Material>();
 		readonly Block block;
-		readonly Floor floor;
+		public readonly Floor floor;
 		readonly string name;
 		public readonly Color color;
 		readonly ushort density; // kg/m^3
@@ -107,6 +123,9 @@ namespace Mini {
 			floor = new Floor(this);
 			// push to list
 			materials.Add(this);
+		}
+		public static Material FromString(string s){
+			return materials.Find(m => m.name == s);
 		}
 	}
 	abstract class MadeFromMaterial {
