@@ -356,9 +356,10 @@ namespace Mappings {
 		}
 		static readonly Color[] blueMarbleColors = new Color[]{
 			new Color(5, 8, 23), // SEA
-			new Color(45, 53, 22), // Af
-			new Color(29, 42, 13), // Am
-			new Color(53, 58, 26), // Aw
+			// A climates based solely on the amazon to get nicer results, but the rest are world average
+			new Color(21, 35, 9), // Af
+			new Color(45, 53, 22), // Am
+			new Color(57, 55, 27), // Aw
 			new Color(114, 100, 65), // BWh
 			new Color(68, 69, 38), // BWk
 			new Color(67, 66, 34), // BSh
@@ -433,9 +434,18 @@ namespace Mappings {
 				return sea;
 			}
 			Color color = blueMarbleColors[blueMarbleClimateList.ToList().IndexOf(w.climate)+1];
+			if (w.climate == "Am"){ // smoother tropical climate colors b/w Aw and Af, ie. Am
+				short driest = w.rainfall.Min();
+				double threshold = 100 - w.annual_rainfall/25;
+				color = new Color(
+					(byte)Program.Remap(driest, 60, threshold, 21, 57),
+					(byte)Program.Remap(driest, 60, threshold, 35, 55),
+					(byte)Program.Remap(driest, 60, threshold, 9, 27)
+				);
+			}
 			// okay now randomly almost-normalize the value/saturation
 			// lower this if the land is too bright
-			double max_almost_normalization = 1;
+			double max_almost_normalization = 0.6;
 			// max RGB
 			byte max = Math.Max(color.R, Math.Max(color.G, color.B));
 			// theoretical max increase
@@ -445,11 +455,15 @@ namespace Mappings {
 			double scale = 4;
 			// actual random increase
 			// increase octaves if variation too extreme or not enough detail
-			double random = (Noise.Simplex.OctaveNoise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 12, 2)+1)/2;
-			double d = 1+random*(d_max-1);
-			color.R = (byte)(color.R*d);
-			color.G = (byte)(color.G*d);
-			color.B = (byte)(color.B*d);
+			double rr = (Noise.Simplex.OctaveNoise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 12, 2)+1)/2;
+			double rg = (Noise.Simplex.OctaveNoise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 13, 2)+1)/2;
+			double rb = (Noise.Simplex.OctaveNoise(xyz.Item1*scale, xyz.Item2*scale, xyz.Item3*scale, 14, 2)+1)/2;
+			double dr = 1+rr*(d_max-1);
+			double dg = 1+rg*(d_max-1);
+			double db = 1+rb*(d_max-1);
+			color.R = (byte)(color.R*dr);
+			color.G = (byte)(color.G*dg);
+			color.B = (byte)(color.B*db);
 			return color;
 		}
 		static Color ColorSatelliteAA(WorldTile w){

@@ -479,7 +479,7 @@ class WorldTile {
 	public readonly double x, y;
 	Resource resource_cache;
 	public int river_inflow; // how many mm anually get converted into streams and rivers
-	readonly short[] rainfall;
+	public readonly short[] rainfall;
 	public readonly short[] temperature;
 	public static readonly float desiredSeaFraction = 0.5F; // 0.4 is about perfect; must be in (0, 0.92]
 	public static readonly short mountain_altitude = 3000; // for rain shadows
