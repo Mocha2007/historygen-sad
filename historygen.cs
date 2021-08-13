@@ -16,7 +16,6 @@ using Console = SadConsole.Console;
 class Program {
 	public static Random rng;
 	public static int seed;
-	public static double precomputed_altitude_cutoff;
 	public static readonly byte tooltip_width = 32;
 	public static Console console;
 	public static World world;
@@ -62,9 +61,6 @@ class Program {
 		Log("Awakening the dusklings...");
 		Global.CurrentScreen = console;
 		new Task(() => { // do async so the window immediately shows up
-			// compute altitude cutoff
-			List<double> pac_data = Simplex.Test().Select(x => Math.Pow(x, WorldTile.altitude_exponent)).ToList();
-			precomputed_altitude_cutoff = Percentile(pac_data, WorldTile.desiredSeaFraction);
 			// gen world
 			long t_start = DateTime.Now.Ticks;
 			world = World.Random();
@@ -383,13 +379,11 @@ class World {
 		if (seaTileFraction < WorldTile.desiredSeaFraction - seaFraction_tolerance){
 			Program.Log(String.Format("too few sea tiles: {0} not in [{1}, {2}]", seaTileFraction,
 				WorldTile.desiredSeaFraction-seaFraction_tolerance, WorldTile.desiredSeaFraction+seaFraction_tolerance));
-			Program.precomputed_altitude_cutoff += 0.01; // attempt corrective measures
 			return false;
 		}
 		if (WorldTile.desiredSeaFraction + seaFraction_tolerance < seaTileFraction){
 			Program.Log(String.Format("too many sea tiles: {0} not in [{1}, {2}]", seaTileFraction,
 				WorldTile.desiredSeaFraction-seaFraction_tolerance, WorldTile.desiredSeaFraction+seaFraction_tolerance));
-			Program.precomputed_altitude_cutoff -= 0.01; // attempt corrective measures
 			return false;
 		}
 		// must have one of every resource
@@ -484,9 +478,17 @@ class WorldTile {
 	public static readonly float desiredSeaFraction = 0.5F; // 0.4 is about perfect; must be in (0, 0.92]
 	public static readonly short mountain_altitude = 3000; // for rain shadows
 	// alt
-	public static readonly double altitude_exponent = 1.2; // in my experience, has the lowest failure rate
+	/// <summary>
+	/// I BELIEVE this has to do with making higher altitudes rarer. <br/>
+	/// higher exponent = flatter land
+	/// </summary>
+	public static readonly double altitude_exponent = 2;
 	public static readonly short altitude_min = -11000;
 	public static readonly short altitude_max = 9000;
+	/// <summary>
+	/// how much to multiply max alt by when generating to compensate for the fact simplex noise favors values near the mean
+	/// </summary>
+	static readonly double altitude_max_overshoot_factor = 2;
 	static readonly byte altitude_scale = 1;
 	// rf
 	// 5 generates a realistic amount of magenta-level regions
@@ -496,11 +498,20 @@ class WorldTile {
 	public static readonly short rainfall_max = 2200;
 	static readonly byte rainfall_scale = 2;
 	// temp
-	public static readonly short temperature_min = -2400;
-	public static readonly short temperature_max = 2600;
+	public static readonly short temperature_min = -2000;
+	public static readonly short temperature_max = 2800;
 	static readonly byte temperature_scale_geographic = 5;
 	static readonly byte temperature_scale_seasonal = 5;
+	/// <summary>
+	/// controls how much temperature varies from the expected as a function of how far from the equator???
+	/// </summary>
 	public static readonly short temperature_anomaly = 4000;
+	/// <summary>
+	/// controls how much temperature goes down as altitude increases <br/>
+	/// for every meter increase, the temperature decreases by 0.65 centicelsius <br/>
+	/// https://scied.ucar.edu/learning-zone/atmosphere/change-atmosphere-altitude
+	/// </summary>
+	static readonly double temperature_lapse_rate = -0.65;
 	public int owner = -1;
 	WorldTile(double x, double y, short elevation, short[] rainfall){
 		double raw_heat = Math.Sin(Math.PI * y); // heat, [0, 1]
@@ -508,8 +519,10 @@ class WorldTile {
 		double seasonal_anomaly_factor = 1 - raw_heat; // how much time affects temperature
 		double geographic_anomaly_factor = Math.Pow(1 - raw_heat, 0.3); // how much distance affects temperature
 		for (byte i = 0; i < 12; i++)
-			temperature[i] = (short)(raw_heat * (temperature_max - temperature_min) + temperature_min
-				+ geographic_anomaly_factor * RandomTemperatureAnomaly(x, y, seasonal_anomaly_factor*i/12));
+			temperature[i] = (short)(temperature_min
+				+ raw_heat * (temperature_max - temperature_min)
+				+ geographic_anomaly_factor * RandomTemperatureAnomaly(x, y, seasonal_anomaly_factor*i/12)
+				+ temperature_lapse_rate*Math.Max(0.0, elevation));
 		// Program.Log(String.Format("{0} => [{1}, {2}]", raw_heat, temperature.Min()/100.0, temperature.Max()/100.0));
 		// Program.Log(String.Format("\trange = {0}°C", (temperature.Max() - temperature.Min())/100.0));
 		this.elevation = elevation;
@@ -755,6 +768,9 @@ class WorldTile {
 				tx*ty*temperature_scale_seasonal,
 				octaves));
 	}
+	/// <summary>
+	/// output in [-1, 1]
+	/// </summary>
 	static double RandomUnadjustedAltitude(double x, double y){
 		double lat = y*Math.PI;
 		double lon = x*Math.PI;
@@ -762,18 +778,17 @@ class WorldTile {
 		x = xyz.Item1*altitude_scale;
 		y = xyz.Item2*altitude_scale;
 		double z = xyz.Item3*altitude_scale;
-		return Math.Pow(Simplex.OctaveNoise(x, y, z, 0, octaves), altitude_exponent);
+		double presigned = Simplex.OctaveNoise(x, y, z, 0, octaves);
+		if (presigned < 0.5) // [-1, 0)
+			return 2*presigned-1;
+		// [0, 1]
+		return Math.Pow(2*presigned-1, altitude_exponent);
 	}
 	static short RandomAltitude(double x, double y){
-		// altitude
 		double unadjusted_altitude = RandomUnadjustedAltitude(x, y);
-		if (unadjusted_altitude < 0 || 1 < unadjusted_altitude)
-			Program.Log(unadjusted_altitude, 2);
-		// this SHOULD be Math.Pow(desiredSeaFraction, altitude_exponent) if Perlin were evenly distributed, but distribution is actually appx. normal mean = 0.5, std = 0.146
-		double seaCutoff = Program.precomputed_altitude_cutoff;
-		return (short)(unadjusted_altitude < seaCutoff ?
-			(1-unadjusted_altitude/seaCutoff) * altitude_min :
-			(unadjusted_altitude-seaCutoff)/(1-seaCutoff)*altitude_max);
+		if (unadjusted_altitude < -1 || 1 < unadjusted_altitude)
+			Program.Log(String.Format("{0} outside [-1, 1]", unadjusted_altitude), 2);
+		return (short)(unadjusted_altitude*altitude_max*altitude_max_overshoot_factor);
 	}
 	public static WorldTile Random(double x, double y){
 		return new WorldTile(x, y, RandomAltitude(x, y), RandomRainfall(x, y));
