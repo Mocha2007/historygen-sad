@@ -276,13 +276,14 @@ namespace People {
 		public static readonly int maxCountries = 200;
 		static readonly WorldTile[] capitals = new WorldTile[maxCountries];
 		public static void Initialize(){
-			// todo: weight them so they distribute randomly on a sphere
 			// choose 200 random tiles and put countries there...
+			double meany = 0.5*World.size;
+			double stdy = 0.2*World.size; // experimentation has shown this to look nicest
 			for (int i = 0; i < maxCountries; i++){
-				WorldTile attempt = Program.world.GetRandomTile();
-				while (0 <= attempt.owner || attempt.y < 0.1 || 0.9 < attempt.y)
-					attempt = Program.world.GetRandomTile();
-				attempt.owner = i;
+				WorldTile attempt;
+				while (0 <= (attempt = Program.world.tiles // reassign every test
+					[Program.Mod((int)MochaRandom.Normal(meany, stdy), World.size), Program.rng.Next(0, 2*World.size)] // longitude random, latitude normally distributed
+					).owner){} // redo if there's already an owner
 				capitals[i] = attempt;
 			}
 			Program.Log(String.Format("{0} countries placed", maxCountries));

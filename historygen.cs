@@ -276,7 +276,7 @@ class World {
 	public static readonly byte size = 64;
 	static readonly float seaFraction_tolerance = 0.15F;
 	static readonly short min_highest_peak_altitude = 5000;
-	readonly WorldTile[,] tiles;
+	public readonly WorldTile[,] tiles;
 	/// <summary>
 	/// a sorted, flattened array of provinces sorted by elevation, from highest to lowest
 	/// </summary>
