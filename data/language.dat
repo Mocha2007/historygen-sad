@@ -1,3 +1,4 @@
+this file must be encoded in codepage 437
 naming
 	name english
 	male albert alfred arthur gilbert joseph john paul theodore william
@@ -11,4 +12,11 @@ naming
 	female appia aula caesula decima fausta gaia hosta lucia maio mamerca mania marcia mettia mino nona numeria octavia paulla prima procula publia quarta quinta secunda servia sexta spuria statia tertia titia tulla vibia volusa vopisca
 	family collina esquilina palatina suburana aemilia aniensis arniensis camilia claudia crustumina cornelia fabia falerina galeria horatia lemonia maecia menenia papiria pollia pomptina publiana pupinia quirina romilia sabatina scaptia sergia stellatina terentina tromentina ufentina velina veturia voltinia
 	nofemalesurname true
+end
+naming
+	name pger
+	male agilaz agithewaz alar¡ks albigaizaz albiharjaz andaswaraz ansulaibaz ansuwaldaz audar¡ks audawakraz audawarduz audawiniz audawulfaz auziwandilaz athalagaizaz athalawulfaz balthawiniz bernuharduz frithugaizaz frithur¡ks fr¢d“ gaizar¡ks gr¡maz gunthiharjaz gunthilaibaz gunthiwulfaz haimar¡ks harjam¢daz harjawaldaz helpar¡ks hildir¡ks hr¢thiberhtaz hr¢thigaizaz hr¢thir¡ks hr¢thiwulfaz ingum‚raz kunjamunduz raginaharduz raginaharjaz raginawaldaz r‚dawulfaz r¡kaharduz segafrithuz sigiwarduz stainawarjaz uzdagaizaz uzdawulfaz waldaharjaz wiljahelmaz theudar¡ks theud¢balthaz theud¢berhtaz
+	female brunj¢hildiz ermunahildiz gudageb¢ mahtihildiz
+	nofemalesurname true
+	patrynomic {0}sunuz
 end

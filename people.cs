@@ -178,7 +178,9 @@ namespace Person {
 namespace People {
 	static class Core {
 		public static void ParseData(){
-			IEnumerable<string> raw = File.ReadAllLines("data/language.dat")
+			// turn raw bytes into string to trick c# into not decoding it
+			string unbroken = new String(File.ReadAllBytes("data/language.dat").Select(b => (char)b).ToArray());
+			IEnumerable<string> raw = unbroken.Split('\n') // should be saved as \r\n but won't matter because we remove whitespace
 				.Select(line =>
 					Regex.Replace(line.ToLower(), @"^\s+|\s+$", "") // set lowercase; remove leading/trailing whitespace
 				);
@@ -321,7 +323,7 @@ namespace People {
 		readonly string[] familyNameBank, maleGivenNameBank, femaleGivenNameBank, neuterGivenNameBank;
 		readonly bool usesTwoGivenNames, givenNamesFirst, nofemalesurname;
 		readonly string patrynomic; // suffix; blank = no patrynomics
-		// eg. Mac{1}, or {1}son
+		// eg. Mac{0}, or {0}son
 		bool usesPatrynomic {
 			get { return 0 < patrynomic.Length; }
 		}
@@ -340,7 +342,7 @@ namespace People {
 		public string RandomFromGender(bool is_male){
 			string family;
 			if (usesPatrynomic)
-				family = String.Format(patrynomic, RandomFromGender(true));
+				family = String.Format(patrynomic, RandomGivenFromGender(true));
 			else {
 				int fi = Program.rng.Next(0, familyNameBank.Length);
 				family = familyNameBank[fi];
