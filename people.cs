@@ -191,6 +191,7 @@ namespace People {
 			string[] family = new string[0];
 			bool usesTwoGivenNames = false;
 			bool givenNamesFirst = true;
+			bool nofemalesurname = false;
 			Action Reset = () => {
 				name = "";
 				male = new string[0];
@@ -199,6 +200,7 @@ namespace People {
 				family = new string[0];
 				usesTwoGivenNames = false;
 				givenNamesFirst = true;
+				nofemalesurname = false;
 			};
 			int namingcount = 0;
 			foreach (string line in raw){
@@ -226,6 +228,9 @@ namespace People {
 					case "givennamesfirst":
 						givenNamesFirst = bool.Parse(split[1]);
 						continue;
+					case "nofemalesurname":
+						nofemalesurname = bool.Parse(split[1]);
+						continue;
 					case "end":
 						break; // handled below
 					default: // just a comment!
@@ -233,7 +238,7 @@ namespace People {
 				}
 				// handle end
 				if (type == "naming"){
-					new NamingSystem(name, male, female, neuter, family, usesTwoGivenNames, givenNamesFirst);
+					new NamingSystem(name, male, female, neuter, family, usesTwoGivenNames, givenNamesFirst, nofemalesurname);
 					namingcount++;
 				}
 				else
@@ -308,15 +313,16 @@ namespace People {
 			-family name/given name order
 		*/
 		readonly string[] familyNameBank, maleGivenNameBank, femaleGivenNameBank, neuterGivenNameBank;
-		readonly bool usesTwoGivenNames, givenNamesFirst;
+		readonly bool usesTwoGivenNames, givenNamesFirst, nofemalesurname;
 		public NamingSystem(string name, string[] given_m, string[] given_f, string[] given_n, string[] family,
-				bool usesTwoGivenNames, bool givenNamesFirst) : base(name){
+				bool usesTwoGivenNames, bool givenNamesFirst, bool nofemalesurname) : base(name){
 			maleGivenNameBank = given_m;
 			femaleGivenNameBank = given_f;
 			neuterGivenNameBank = given_n;
 			familyNameBank = family;
 			this.usesTwoGivenNames = usesTwoGivenNames;
 			this.givenNamesFirst = givenNamesFirst;
+			this.nofemalesurname = nofemalesurname;
 			systems.Add(this);
 		}
 		public string RandomFromGender(bool is_male){
@@ -324,6 +330,8 @@ namespace People {
 			string givens = RandomGivenFromGender(is_male);
 			if (usesTwoGivenNames)
 				givens += " " + RandomGivenFromGender(is_male);
+			if (!is_male && nofemalesurname)
+				return givens;
 			return String.Format(givenNamesFirst ? "{0} {1}" : "{1} {0}", givens, familyNameBank[fi]);
 		}
 		string RandomGivenFromGender(bool is_male){

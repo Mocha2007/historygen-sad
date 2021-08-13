@@ -10,4 +10,5 @@ naming
 	male agrippa appius aulus caeso decimus faustus gaius gnaeus hostus lucius mamercus manius marcus mettius nonus numerius octavius opiter paullus postumus proculus publius quintus septimus sertor servius sextus spurius statius tiberius titus tullus vibius volesus vopiscus
 	female appia aula caesula decima fausta gaia hosta lucia maio mamerca mania marcia mettia mino nona numeria octavia paulla prima procula publia quarta quinta secunda servia sexta spuria statia tertia titia tulla vibia volusa vopisca
 	family collina esquilina palatina suburana aemilia aniensis arniensis camilia claudia crustumina cornelia fabia falerina galeria horatia lemonia maecia menenia papiria pollia pomptina publiana pupinia quirina romilia sabatina scaptia sergia stellatina terentina tromentina ufentina velina veturia voltinia
+	nofemalesurname true
 end
