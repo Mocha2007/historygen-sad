@@ -245,7 +245,7 @@ namespace People {
 						nofemalesurname = bool.Parse(split[1]);
 						continue;
 					case "patronymic":
-						patronymic = split[1];
+						patronymic = String.Join(' ', split.Skip(1));
 						continue;
 					case "end":
 						break; // handled below
